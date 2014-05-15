@@ -1,0 +1,14 @@
+{
+    "name": "Chartphael",
+    "version": "0.0.1",
+    "main": "dist/",
+    "ignore": [
+        ".gitignore",
+        "bower.json",
+        "README.md",
+        "LICENSE"
+    ],
+    "dependencies": {
+        "raphael": ">=v2.1.2",
+    }
+}

@@ -99,7 +99,3 @@ app.chart.pie = {
 	}
 
 };
-
-
-app.chart.profile.init('profile_bar');
-app.chart.pie.init('pie_chart');
