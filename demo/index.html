@@ -27,9 +27,22 @@
         </section>
         
         <script src="../dist/chartphael.js"></script>
+        
+        <script>
+            var pieChartJSON = {
+                "items": [
+                    { "label": "Europe", "percent": "20", "color": "#717917" },
+                    { "label": "America", "percent": "20", "color": "#a6beaa" },
+                    { "label": "Africa", "percent": "30", "color": "#bf8c53" },
+                    { "label": "Asia", "percent": "10", "color": "#e4c95e" },
+                    { "label": "Australia", "percent": "20", "color": "#f1eb66" },
+                ]
+            };
+        </script>
+
         <script>
             app.chart.profile.init('profile_bar');
-            app.chart.pie.init('pie_chart');
+            app.chart.pie.init('pie_chart', pieChartJSON);
         </script>
 
     </body>
