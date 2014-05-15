@@ -9,6 +9,6 @@
         "LICENSE"
     ],
     "dependencies": {
-        "raphael": ">=v2.1.2",
+        "raphael": ">=v2.1.2"
     }
 }
