@@ -1,0 +1,17 @@
+* { margin: 0; padding: 0; }
+html, body { min-height: 100%; font-family: sans-serif; }
+
+#sidebar { position: absolute; top: 0; left: 0; bottom: 0; background: #fdfdfd; width: 250px; }
+#sidebar:after { content: ""; position: absolute; top: 0; right: 0; bottom: 0; width: 25px; background: linear-gradient(to left, rgba(0,0,0,0.07) 0%,rgba(0,0,0,0) 80%); }
+#sidebar figure { width: 120px; height: 120px; margin: 25px auto 0; position: relative; padding: 6px; }
+#sidebar img { width: 100%; height: 100%; display: block; border-radius: 50%; }
+
+#content { margin-left: 250px; padding: 25px; }
+
+.chart_wrap { margin: 20px 0; width: 470px; height: 300px; background: #fafafa; position: relative; }
+
+h1 { font-size: 16px; font-weight: 400; padding: 10px; text-transform: uppercase; color: #979980; background: #f1f2ef; border-radius: 5px; margin: 0; letter-spacing: .5px; }
+
+
+#profile_bar,
+#pie_chart { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
