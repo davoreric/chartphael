@@ -3,6 +3,7 @@
     "version": "0.0.1",
     "main": "dist/",
     "ignore": [
+        "demo/raphael/",
         ".gitignore",
         "bower.json",
         "README.md",
