@@ -24,11 +24,19 @@
                 </div>
             </section>
 
+            <section>
+                <h1>Line chart</h1>
+                <div class="chart_wrap">
+                    <div id="line_chart"></div>
+                </div>
+            </section>
+
         </section>
         
         <script src="../dist/chartphael.js"></script>
         
         <script>
+            
             var pieChartJSON = {
                 "items": [
                     { "label": "Europe", "percent": "20", "color": "#717917" },
@@ -38,11 +46,30 @@
                     { "label": "Australia", "percent": "20", "color": "#f1eb66" },
                 ]
             };
+
+            var lineChartJSON = {
+                "axis": {
+                    "x": [0,2,4,6,8,10,12,14,16,18,20,22,24],
+                    "y": [0,25,50,75,100,125,150,175]
+                },
+                "items": [
+                    { "x": 10, "y": 10 },
+                    { "x": 20, "y": 30 },
+                    { "x": 30, "y": 40 },
+                    { "x": 40, "y": 20 },
+                    { "x": 50, "y": 50 },
+                    { "x": 60, "y": 40 },
+                    { "x": 70, "y": 20 },
+                    { "x": 80, "y": 25 }
+                ]
+            };
+
         </script>
 
         <script>
-            app.chart.profile.init('profile_bar');
+            app.chart.arc.init('profile_bar');
             app.chart.pie.init('pie_chart', pieChartJSON);
+            app.chart.line.init('line_chart', lineChartJSON);
         </script>
 
     </body>

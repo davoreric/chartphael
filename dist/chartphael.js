@@ -1,54 +1,9 @@
-Raphael.fn.pieChart = function (cx, cy, r, values, labels, colors) {
-    var paper = this,
-        rad = Math.PI / 180,
-        chart = this.set();
-
-
-    function sector(cx, cy, r, startAngle, endAngle, params) {
-        var x1 = cx + r * Math.cos(-startAngle * rad),
-            x2 = cx + r * Math.cos(-endAngle * rad),
-            y1 = cy + r * Math.sin(-startAngle * rad),
-            y2 = cy + r * Math.sin(-endAngle * rad);
-        return paper.path(["M", cx, cy, "L", x1, y1, "A", r, r, 0, +(endAngle - startAngle > 180), 0, x2, y2, "z"]).attr(params);
-    }
-
-    var angle = 0,
-        total = 0,
-        process = function (j) {
-            var value = values[j],
-                angleplus = 360 * value / total,
-                popangle = angle + (angleplus / 2),
-                color = colors[j],
-                ms = 500,
-                delta = 30,
-                p = sector(cx, cy, r, angle, angle + angleplus, {fill: color, "stroke-width": 0}),
-                txt = paper.text(cx + (r + delta + 55) * Math.cos(-popangle * rad), cy + (r + delta + 25) * Math.sin(-popangle * rad), labels[j]).attr({fill: '#000', stroke: "none", opacity: 0, "font-size": 20});
-            p.mouseover(function () {
-                p.stop().animate({transform: "s1.1 1.1 " + cx + " " + cy}, ms, "elastic");
-                txt.stop().animate({opacity: 1}, ms, "elastic");
-            }).mouseout(function () {
-                p.stop().animate({transform: ""}, ms, "elastic");
-                txt.stop().animate({opacity: 0}, ms);
-            });
-            angle += angleplus;
-            chart.push(p);
-            chart.push(txt);
-        };
-    for (var i = 0, ii = values.length; i < ii; i++) {
-        total += values[i];
-    }
-    for (i = 0; i < ii; i++) {
-        process(i);
-    }
-    return chart;
-};
-
-
-
 var app = app || {};
 app.chart = app.chart || {};
 
-app.chart.profile = {
+
+
+app.chart.arc = {
 
 	init: function(id){
 
@@ -159,6 +114,116 @@ app.chart.pie = {
 		
 		this.paper.pieChart(this.centerY, this.centerX, this.radius, values, labels, colors);
 			
+	}
+
+};
+
+Raphael.fn.pieChart = function (cx, cy, r, values, labels, colors) {
+    var paper = this,
+        rad = Math.PI / 180,
+        chart = this.set();
+
+
+    function sector(cx, cy, r, startAngle, endAngle, params) {
+        var x1 = cx + r * Math.cos(-startAngle * rad),
+            x2 = cx + r * Math.cos(-endAngle * rad),
+            y1 = cy + r * Math.sin(-startAngle * rad),
+            y2 = cy + r * Math.sin(-endAngle * rad);
+        return paper.path(["M", cx, cy, "L", x1, y1, "A", r, r, 0, +(endAngle - startAngle > 180), 0, x2, y2, "z"]).attr(params);
+    }
+
+    var angle = 0,
+        total = 0,
+        process = function (j) {
+            var value = values[j],
+                angleplus = 360 * value / total,
+                popangle = angle + (angleplus / 2),
+                color = colors[j],
+                ms = 500,
+                delta = 30,
+                p = sector(cx, cy, r, angle, angle + angleplus, {fill: color, "stroke-width": 0});
+
+            p.mouseover(function () {
+                p.stop().animate({transform: "s1.1 1.1 " + cx + " " + cy}, ms, "bounce");
+            }).mouseout(function () {
+                p.stop().animate({transform: ""}, ms, "bounce");
+            });
+
+            p.scale(0, 0, cx, cy);
+            p.animate({ transform: 's1 1 ' + cx + ' ' + cy }, ms, "bounce");
+
+            angle += angleplus;
+            chart.push(p);
+
+        };
+
+    for (var i = 0, ii = values.length; i < ii; i++) {
+        total += values[i];
+    }
+
+    for (i = 0; i < ii; i++) {
+        process(i);
+    }
+
+    return chart;
+
+};
+
+app.chart.line = {
+
+	init: function(id,data){
+
+		this.el = document.getElementById(id);
+		this.data = data;
+		this.width = this.el.offsetWidth;
+		this.height = this.el.offsetHeight;
+
+		this.padding = 40;
+
+		this.bottom_left = [this.padding,this.height-this.padding];
+		this.bottom_right = [this.width-this.padding,this.height-this.padding];
+		this.top_left = [this.padding,this.padding];
+		this.top_right = [this.width-this.padding,this.padding];
+
+		this.paper = Raphael(id,this.width,this.height);
+
+		this.x_axis_value = this.data.axis.x;
+		this.y_axis_value = this.data.axis.y;
+
+		this.setGrid();
+		this.setPoints();
+
+	},
+
+	setGrid: function(){
+
+		var path = null;
+		var incrementX = (this.bottom_right[0] - this.bottom_left[0])/(this.x_axis_value.length-1);
+		var incrementY = (this.bottom_left[1] - this.top_left[1])/(this.y_axis_value.length-1);
+		var textAttr = {fill: '#666','font-size':'10px'};
+
+		for (i=0;i<this.y_axis_value.length;i++){
+			var currInc = incrementY*i;
+			if(i!=0&&i!=this.y_axis_value.length-1){
+				path += 'M'+ this.bottom_left[0] +' '+ (this.bottom_left[1]-currInc) +'L'+ this.bottom_right[0] +' '+ (this.bottom_right[1]-currInc);
+			}
+			this.paper.text(this.bottom_left[0]-this.padding/2, this.bottom_left[1]-currInc, this.y_axis_value[i]).attr(textAttr);
+		}
+
+		for (i=0;i<this.x_axis_value.length;i++){
+			var currInc = incrementX*i;
+			if(i!=0&&i!=this.x_axis_value.length-1){
+				path += 'M'+ (this.bottom_left[0]+currInc) +' '+ this.bottom_left[1] +'L'+ (this.top_left[0]+currInc) +' '+ this.top_left[1];	
+			}
+			this.paper.text(this.bottom_left[0]+currInc, this.bottom_left[1]+this.padding/2, this.x_axis_value[i]).attr(textAttr);
+		}
+
+		this.paper.path(path).attr({stroke: '#d8decf', 'stroke-width': 1});
+
+	},
+
+	setPoints: function(){
+
 	}
 
 };
