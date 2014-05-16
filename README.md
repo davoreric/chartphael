@@ -4,14 +4,11 @@ chartphael
 chart library for raphael.js, still in heavy ALPHA  
 
 
-
 Init procedure:  
-
 app.chart.arc.init('profile_bar');  
-
 app.chart.pie.init('pie_chart', pieChartJSON);  
-
 app.chart.line.init('line_chart', lineChartJSON);  
+
 
 
 JSON formats:  
