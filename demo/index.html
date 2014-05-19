@@ -53,23 +53,40 @@
                     "y": [0,25,50,75,100,125,150,175]
                 },
                 "items": [
-                    { "x": 10, "y": 10 },
-                    { "x": 20, "y": 30 },
-                    { "x": 30, "y": 40 },
-                    { "x": 40, "y": 20 },
-                    { "x": 50, "y": 50 },
-                    { "x": 60, "y": 40 },
-                    { "x": 70, "y": 20 },
-                    { "x": 80, "y": 25 }
+                    { "x": 0, "y": 30 },
+                    { "x": 4, "y": 50 },
+                    { "x": 6, "y": 65 },
+                    { "x": 8, "y": 80 },
+                    { "x": 10, "y": 95 },
+                    { "x": 13, "y": 95 },
+                    { "x": 18, "y": 110 },
+                    { "x": 20, "y": 85 },
+                    { "x": 22, "y": 75 },
+                    { "x": 24, "y": 95 }
                 ]
             };
 
         </script>
 
         <script>
-            app.chart.arc.init('profile_bar');
-            app.chart.pie.init('pie_chart', pieChartJSON);
-            app.chart.line.init('line_chart', lineChartJSON);
+
+            var profileArc = new chartphael({
+                id: 'profile_bar',
+                type: 'arc'
+            });
+
+            var pieChart = new chartphael({
+                id: 'pie_chart',
+                type: 'pie',
+                data: pieChartJSON
+            });
+
+            var lineGraph = new chartphael({
+                id: 'line_chart',
+                type: 'line',
+                data: lineChartJSON
+            });
+            
         </script>
 
     </body>
