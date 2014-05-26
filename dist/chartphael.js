@@ -85,11 +85,21 @@ https://github.com/davoreric/chartphael
 
 		},
 
-		'extendObject': function(a, b){
-		    for(var key in b)
-		        if(b.hasOwnProperty(key))
-		            a[key] = b[key];
-		    return a;
+		'extend': function(obj) {
+
+			var tempArray = Array.prototype.slice.call(arguments, 1);
+
+			for (i=0;i<tempArray.length;i++){
+				var source = tempArray[i];
+				if (source) {
+					for (var prop in source) {
+						obj[prop] = source[prop];
+					}
+				}
+			}
+
+			return obj;
+
 		}
 
 	};
