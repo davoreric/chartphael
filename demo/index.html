@@ -11,29 +11,40 @@
         <section id="sidebar">
             <figure>
                 <img src="assets/profile.png" alt="profile" />
-                <div id="profile_bar" data-value="30"></div>        
+                <div class="chart_el" id="profile_bar" data-value="30"></div>        
             </figure>
         </section>
 
         <section id="content">
 
             <section>
-                <h1>Pie chart</h1>
-                <div class="chart_wrap">
-                    <div id="pie_chart"></div>
+                <h2>BMF Chart</h2>
+                <div class="chart_wrap large">
+                    <div class="chart_el" id="bmf_chart"></div>
                 </div>
             </section>
 
             <section>
-                <h1>Line chart</h1>
+                <h2>Pie chart</h2>
                 <div class="chart_wrap">
-                    <div id="line_chart"></div>
+                    <div class="chart_el" id="pie_chart"></div>
+                </div>
+            </section>
+
+            <section>
+                <h2>Line chart</h2>
+                <div class="chart_wrap">
+                    <div class="chart_el" id="line_chart"></div>
                 </div>
             </section>
 
         </section>
         
         <script src="../dist/chartphael.js"></script>
+        <script src="../dist/graph/arc.js"></script>
+        <script src="../dist/graph/mbf.js"></script>
+        <script src="../dist/graph/line.js"></script>
+        <script src="../dist/graph/pie.js"></script>
         
         <script>
             
@@ -44,6 +55,20 @@
                     { "label": "Africa", "percent": "30", "color": "#bf8c53" },
                     { "label": "Asia", "percent": "10", "color": "#e4c95e" },
                     { "label": "Australia", "percent": "20", "color": "#f1eb66" },
+                ]
+            };
+
+            var bmfChartJSON = {
+                "items": [
+                    { "x": 0, "y": 0 },
+                    { "x": 4, "y": 50 },
+                    { "x": 6, "y": 65 },
+                    { "x": 8, "y": 80 },
+                    { "x": 10, "y": 95 },
+                    { "x": 13, "y": 95 },
+                    { "x": 18, "y": 110 },
+                    { "x": 20, "y": 85 },
+                    { "x": 24, "y": 95 }
                 ]
             };
 
@@ -75,6 +100,12 @@
                 type: 'arc'
             });
 
+            var bmfChart = new chartphael({
+                id: 'bmf_chart',
+                type: 'bmf',
+                data: bmfChartJSON
+            });
+
             var pieChart = new chartphael({
                 id: 'pie_chart',
                 type: 'pie',
@@ -84,7 +115,9 @@
             var lineGraph = new chartphael({
                 id: 'line_chart',
                 type: 'line',
-                data: lineChartJSON
+                data: lineChartJSON,
+                dataXMax: 24,
+                dataYMax: 175
             });
             
         </script>
