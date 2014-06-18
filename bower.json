@@ -1,6 +1,6 @@
 {
     "name": "Chartphael",
-    "version": "0.0.1",
+    "version": "0.0.51",
     "main": "dist/",
     "ignore": [
         "demo/",
