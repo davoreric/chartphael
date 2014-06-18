@@ -17,19 +17,30 @@ chartphael.bmf = function(options) {
 	this.options = chartphael.helper.extend({}, chartphael.bmf.defaults, options);
 
 	//set internal data
-	this.node = document.getElementById(this.options.id);
+	this.node = this.options.node;
 	this.data = this.options.data;
 
-	this.paperSize = {
-		'x': this.node.offsetWidth,
-		'y': this.node.offsetHeight
-	};
+	if(this.options.dimensions){
+
+		this.paperSize = {
+			'x': this.options.dimensions.width,
+			'y': this.options.dimensions.height
+		};
+
+	} else {
+
+		this.paperSize = {
+			'x': this.node.offsetWidth,
+			'y': this.node.offsetHeight
+		};
+
+	}
 
 	//get boundary coordinates for grid and graph
 	this.bound = chartphael.helper.getBound.call(this,this.paperSize,this.options.padding);
 
 	//set SVG paper workarea
-	this.paper = Raphael(this.options.id,this.paperSize.x,this.paperSize.y);
+	this.paper = Raphael(this.node,this.paperSize.x,this.paperSize.y);
 
 	//call method for creating grid
 	this.setGrid();
@@ -117,6 +128,7 @@ chartphael.bmf.defaults = {
 	yAxis: true,
 	directionY: 'left',
 	directionX: 'bottom',
+	dimensions: false,
 	bound: {
 		'x': 0,
 		'y': 100

@@ -13,7 +13,7 @@ https://github.com/davoreric/chartphael
 
 chartphael.line = function(options) {
 
-	this.node = document.getElementById(options.id);
+	this.node = options.node;
 	this.data = options.data;
 	this.width = this.node.offsetWidth;
 	this.height = this.node.offsetHeight;

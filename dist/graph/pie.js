@@ -13,7 +13,7 @@ https://github.com/davoreric/chartphael
 
 chartphael.pie = function(options) {
 
-	this.node = document.getElementById(options.id);
+	this.node = options.node;
 	this.data = options.data.items;
 	this.width = this.node.offsetWidth;
 	this.height = this.node.offsetHeight;
@@ -22,7 +22,7 @@ chartphael.pie = function(options) {
 	this.centerY = this.width/2;
 	this.radius = this.centerX-40;
 
-	this.paper = Raphael(options.id,this.width,this.height);
+	this.paper = Raphael(this.node,this.width,this.height);
 
 	this.setPie();
 

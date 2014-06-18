@@ -13,7 +13,7 @@ https://github.com/davoreric/chartphael
 
 chartphael.arc = function(options) {
 
-	this.node = document.getElementById(options.id);
+	this.node = options.node;
 	this.width = this.node.offsetWidth;
 	this.stroke = 6;
 	this.radius = (this.width - 2*this.stroke)/2;
@@ -21,7 +21,7 @@ chartphael.arc = function(options) {
 	this.colorBkg = '#ccc';
 	this.colorChart = '#8fbb48';
 
-	this.paper = Raphael(options.id,this.width,this.width);
+	this.paper = Raphael(this.node,this.width,this.width);
 
 	this.setArcAttr();
 	this.setBkg();

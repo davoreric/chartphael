@@ -113,12 +113,12 @@
         <script>
 
             var profileArc = new chartphael({
-                id: 'profile_bar',
+                node: document.getElementById('profile_bar'),
                 type: 'arc'
             });
 
             var bmfChart = new chartphael({
-                id: 'bmf_chart',
+                node: document.getElementById('bmf_chart'),
                 type: 'bmf',
                 data: bmfChartJSON,
                 fixedStepY: 150,
@@ -129,22 +129,22 @@
                     'right': 100,
                     'bottom': 100,
                     'left': 0
-                },
+                }
             });
 
             var pieChart = new chartphael({
-                id: 'pie_chart',
+                node: document.getElementById('pie_chart'),
                 type: 'pie',
                 data: pieChartJSON
             });
 
-            var lineGraph = new chartphael({
-                id: 'line_chart',
+            /*var lineGraph = new chartphael({
+                node: document.getElementById('line_chart'),
                 type: 'line',
                 data: lineChartJSON,
                 dataXMax: 24,
                 dataYMax: 175
-            });
+            });*/
             
         </script>
 

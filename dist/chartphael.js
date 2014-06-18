@@ -10,7 +10,7 @@ https://github.com/davoreric/chartphael
 
 	function chartphael(options) {
 
-	    if ( !(document.getElementById(options.id) == null || chartphael[options.type] == null) ) {
+	    if ( !(options.node == null || chartphael[options.type] == null) ) {
 
 			return new chartphael[options.type](options);
 
