@@ -20,23 +20,183 @@ https://github.com/davoreric/chartphael
 
 	chartphael.draw = {
 
-		'grid': function(bound){
+		'grid': function(){
 
-			var x_custom_length = Math.ceil((this.size.x - (this.options.padding.left + this.options.padding.right))/this.options.fixedStepX);
 			var path;
 
-			for (i=0;i<x_custom_length;i++){
-				var currInc = this.options.fixedStepX*i;
-				path += 'M'+ (bound.br.x-currInc) +' '+ bound.br.y +'L'+ (bound.tr.x-currInc) +' '+ bound.tr.y;
+			//checking if grid has Y axis
+			if (this.options.yAxis) {
+
+				path = chartphael.draw.gridY.call(this);
+
+			}
+
+			//checking if grid has X axis
+			if (this.options.xAxis) {
+
+				path = path + chartphael.draw.gridX.call(this);
+
 			}
 
 			return path;
 
 		},
 
-		'line': function(){
+		'gridY': function(){
 
-			
+			//var definition
+			var yAxisAmount,
+				yIncrement,
+				yPos,
+				yAxisPath;
+
+			//test for fixed or dynamic steps, and setting steps amount
+			if( this.options.fixedStepY ) {
+				
+				yAxisAmount = Math.ceil(this.bound.size.x/this.options.fixedStepY);
+				yIncrement = this.options.fixedStepY;
+
+			} else {
+
+				yAxisAmount = this.data.items.length;
+				yIncrement = this.bound.size.x/(yAxisAmount-1);
+				
+			}
+
+			//setting direction (left is default)
+			if ( this.options.directionY === 'right' ) {
+
+				yPos = {
+					inc: -1,
+					bottomX: this.bound.br.x,
+					bottomY: this.bound.br.y,
+					topX: this.bound.tr.x,
+					topY: this.bound.tr.y
+				}
+
+			} else {
+				
+				yPos = {
+					inc: 1,
+					bottomX: this.bound.bl.x,
+					bottomY: this.bound.bl.y,
+					topX: this.bound.tl.x,
+					topY: this.bound.tl.y
+				}
+
+			}
+		
+			//setting path for Y axis
+			for ( i=0; i<yAxisAmount; i++ ) {
+				var currInc = yIncrement*i*yPos.inc;
+				yAxisPath += 'M'+ (yPos.bottomX+currInc) +' '+ yPos.bottomY +'L'+ (yPos.topX+currInc) +' '+ yPos.topY;
+			}
+
+			return yAxisPath;
+
+		},
+
+		'gridX': function(){
+
+			//var definition
+			var xAxisAmount,
+				xIncrement,
+				xPos,
+				xAxisPath;
+
+			//test for fixed or dynamic steps, and setting steps amount
+			if( this.options.fixedStepX ) {
+				
+				xAxisAmount = Math.ceil(this.bound.size.y/this.options.fixedStepX);
+				xIncrement = this.options.fixedStepX;
+
+			} else {
+
+				xAxisAmount = this.data.items.length;
+				xIncrement = this.bound.size.y/(xAxisAmount-1);
+				
+			}
+
+			//setting direction (bottom is default)
+			if ( this.options.directionX === 'top' ) {
+
+				xPos = {
+					inc: 1,
+					leftX: this.bound.tl.x,
+					leftY: this.bound.tl.y,
+					rightX: this.bound.tr.x,
+					rightY: this.bound.tr.y
+				}
+
+			} else {
+				
+				xPos = {
+					inc: -1,
+					leftX: this.bound.bl.x,
+					leftY: this.bound.bl.y,
+					rightX: this.bound.br.x,
+					rightY: this.bound.br.y
+				}
+
+			}
+		
+			//setting path for Y axis
+			for ( i=0; i<xAxisAmount; i++ ) {
+				var currInc = xIncrement*i*xPos.inc;
+				xAxisPath += 'M'+ xPos.leftX +' '+ (xPos.leftY+currInc) +'L'+ xPos.rightX +' '+ (xPos.rightY+currInc);
+			}
+
+			return xAxisPath;
+
+		},
+
+		'line': function(setup){
+
+			var items = this.data.items,
+				data = chartphael.helper.getDataRange.call(this,this.data,'y'),
+				dataHeight = data.range,
+				linePath = '';
+
+			for(i=0;i<items.length;i++){
+
+				if (this.options.fixedStepY) {
+
+					var currInc = this.options.fixedStepY*i,
+						pointPosX = this.bound.br.x-currInc,
+						pointPosY = this.bound.br.y - ((items[i].y - data.min)*(this.bound.size.y/dataHeight));
+
+				} else {
+
+					var pointPosX = this.bound.br.x-currInc,
+						pointPosY = this.bound.bl.y - ((items[i].y - data.min)*(this.bound.size.y/dataHeight));
+
+				}
+
+				if (setup.dots) {
+
+					this.paper.circle(pointPosX, pointPosY, this.options.circleRadius).attr(this.options.circleStyle);	
+
+					if (setup.dotsText) {
+						
+						this.paper.text(pointPosX, pointPosY+this.options.circleRadius*3, items[i].y).attr(this.options.circleTextStyle);
+
+					}
+
+				}				
+				
+				if (i==0) {
+
+					linePath += 'M'+ pointPosX +' '+ pointPosY;
+
+				} else {
+
+					linePath += 'L'+ pointPosX +' '+ pointPosY;
+
+				}
+				
+			}
+
+			return linePath;
 
 		}
 
@@ -44,7 +204,7 @@ https://github.com/davoreric/chartphael
 
 	chartphael.helper = {
 		
-		'getBound': function(size,padding){
+		'getBound': function(paperSize,padding){
 
 			var bound = {
 				'tl': {
@@ -52,16 +212,20 @@ https://github.com/davoreric/chartphael
 					'y': padding.top
 				},
 				'tr': {
-					'x': size.x-padding.right,
+					'x': paperSize.x-padding.right,
 					'y': padding.top
 				},
 				'br': {
-					'x': size.x-padding.right,
-					'y': size.y-padding.bottom
+					'x': paperSize.x-padding.right,
+					'y': paperSize.y-padding.bottom
 				},
 				'bl': {
 					'x': padding.left,
-					'y': size.y-padding.bottom
+					'y': paperSize.y-padding.bottom
+				},
+				'size': {
+					'x': paperSize.x - (padding.left + padding.right),
+					'y': paperSize.y - (padding.top + padding.bottom)
 				}
 			}
 
@@ -69,19 +233,40 @@ https://github.com/davoreric/chartphael
 
 		},
 
-		'getDataRange': function(range,type){
+		'getDataRange': function(data){
 
-			var dataRange = new Array();
-			for(i=0;i<range.length;i++){
-				dataRange.push(range[i].y)
+			var dataRange = new Array(),
+				range = data.items;
+
+			for (i=0;i<range.length;i++) {
+				
+				dataRange.push(range[i].y);
+
 			}
 
-			var min = Math.min.apply(Math, dataRange);
-			var max = Math.max.apply(Math, dataRange);
+			if(data.infoAxis) {
 
-			var newRange = max - min;
+				for (i=0;i<data.infoAxis.length;i++) {
+					
+					dataRange.push(data.infoAxis[i].coord.y);
 
-			return newRange;
+				}
+
+			}
+
+			var min = Math.min.apply(Math, dataRange),
+				max = Math.max.apply(Math, dataRange);
+
+			if ( this.options.bound ) {
+				min = min - this.options.bound.y;
+				max = max + this.options.bound.y;
+			}
+
+			return {
+				"min": min,
+				"max": max,
+				"range": max - min
+			};
 
 		},
 
@@ -107,3 +292,9 @@ https://github.com/davoreric/chartphael
 	window.chartphael = chartphael;
 
 })();
+
+chartphael.prototype.drawGrid = function(){
+
+	console.log(1);
+	
+};
