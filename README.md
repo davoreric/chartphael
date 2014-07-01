@@ -7,12 +7,12 @@ chart library for raphael.js, still in heavy ALPHA
 Init procedure:  
 
         var profileArc = new chartphael({
-            id: 'profile_bar',
+            node: document.getElementById('profile_bar'),
             type: 'arc'
         });
 
         var bmfChart = new chartphael({
-            id: 'bmf_chart',
+            node: document.getElementById('bmf_chart'),
             type: 'bmf',
             data: bmfChartJSON,
             fixedStepY: 150,
@@ -23,11 +23,11 @@ Init procedure:
                 'right': 100,
                 'bottom': 100,
                 'left': 0
-            },
+            }
         });
 
         var pieChart = new chartphael({
-            id: 'pie_chart',
+            node: document.getElementById('pie_chart'),
             type: 'pie',
             data: pieChartJSON
         });
@@ -46,11 +46,11 @@ JSON formats:
 
 		var pieChartJSON = {
             "items": [
-                { "label": "Europe", "percent": "20", "color": "#717917" },
-                { "label": "America", "percent": "20", "color": "#a6beaa" },
-                { "label": "Africa", "percent": "30", "color": "#bf8c53" },
-                { "label": "Asia", "percent": "10", "color": "#e4c95e" },
-                { "label": "Australia", "percent": "20", "color": "#f1eb66" },
+                { "percent": "20", "color": "#717917" },
+                { "percent": "20", "color": "#a6beaa" },
+                { "percent": "30", "color": "#bf8c53" },
+                { "percent": "10", "color": "#e4c95e" },
+                { "percent": "20", "color": "#f1eb66" }
             ]
         };
 
@@ -74,7 +74,18 @@ JSON formats:
                 { "y": 1300 },
                 { "y": 1600 },
                 { "y": 1600 }
-            ]
+            ],
+            "customCircle": {
+                "statusColor": "#df4c44",
+                "progress": {
+                    "innerStep": 100,
+                    "outerStep": [
+                        { "percent": 25, "color": "#e6d62c" },
+                        { "percent": 25, "color": "#df4c44" },
+                        { "percent": 50, "color": "#f3f3f0" }
+                    ]
+                }
+            }
         };
 
         var lineChartJSON = {
