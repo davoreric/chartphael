@@ -13,31 +13,50 @@ https://github.com/davoreric/chartphael
 
 chartphael.pie = function(options) {
 
-	this.node = options.node;
-	this.data = options.data.items;
-	this.width = this.node.offsetWidth;
-	this.height = this.node.offsetHeight;
+	//set public options and merge it with passed option object
+	this.options = chartphael.helper.extend({}, chartphael.pie.defaults, options);
 
-	this.centerX = this.height/2;
-	this.centerY = this.width/2;
-	this.radius = this.centerX-40;
+	//set internal data
+	this.node = this.options.node;
+	this.data = this.options.data.items;
 
-	this.paper = Raphael(this.node,this.width,this.height);
+	this.paperSize = {
+		'x': this.node.offsetWidth,
+		'y': this.node.offsetHeight
+	};
 
+	this.centerX = this.paperSize.x/2;
+	this.centerY = this.paperSize.y/2;
+	this.radius = this.centerY-40;
+
+	//set SVG paper workarea
+	this.paper = Raphael(this.node,this.paperSize.x,this.paperSize.y);
+
+	//adding custom arc attribute
+	this.paper.customArc();
+
+	//call method for creating pie graph
 	this.setPie();
 
-}
+};
 
-chartphael.pie.prototype.setPie = function(){
+chartphael.helper.extend(chartphael.pie.prototype, {
 
-	var values = [],
+	setPie: function(){
+
+		var values = [],
 		colors = [];
 
-	for(i=0;i<this.data.length;i++){
-		values.push(parseInt(this.data[i].percent));
-    	colors.push(this.data[i].color);
-	}
-	
-	//this.paper.pieChart(this.centerX, this.centerY, this.radius, values, colors, true);
+		for(i=0;i<this.data.length;i++){
+			values.push(parseInt(this.data[i].percent));
+	    	colors.push(this.data[i].color);
+		}
 		
-};
+		this.paper.pieChart(this.centerX, this.centerY, this.radius, values, colors, true);
+
+	}
+
+});
+
+//default values
+chartphael.pie.defaults = {};
