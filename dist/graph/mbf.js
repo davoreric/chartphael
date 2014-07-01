@@ -42,8 +42,8 @@ chartphael.bmf = function(options) {
 	//set SVG paper workarea
 	this.paper = Raphael(this.node,this.paperSize.x,this.paperSize.y);
 
-	//custom arc attribute
-	this.customArc();
+	//adding custom arc attribute
+	this.paper.customArc();
 
 	//call method for creating grid
 	this.setGrid();
@@ -101,20 +101,24 @@ chartphael.helper.extend(chartphael.bmf.prototype, {
 			values = [],
 			colors = [];
 
-		for(i=0;i<centralData.length;i++){
-			values.push(parseInt(centralData[i].percent));
-	    	colors.push(centralData[i].color);
+		if(centralData){
+
+			for(i=0;i<centralData.length;i++){
+				values.push(parseInt(centralData[i].percent));
+		    	colors.push(centralData[i].color);
+			}
+
+			this.paper.pieChart(pointPosX, pointPosY, 50, values, colors);
+
+			this.paper.circle(pointPosX, pointPosY, 38).attr({
+				'fill': '#fff',
+				'stroke-width': 0
+			});
+
 		}
 
-		this.paper.pieChart(pointPosX, pointPosY, 50, values, null, colors);
-
-		this.paper.circle(pointPosX, pointPosY, 38).attr({
-			'fill': '#fff',
-			'stroke-width': 0
-		});
-
 		//text
-		this.paper.text(pointPosX, pointPosY, this.data.customCircle.value).attr({
+		this.paper.text(pointPosX, pointPosY, this.data.items[this.data.items.length-1].y).attr({
 			'fill': '#8eb727',
 			'font-size':'14px'
 		});
@@ -123,8 +127,12 @@ chartphael.helper.extend(chartphael.bmf.prototype, {
 		var innerCircle = this.paper.path().attr({
 		    'stroke': '#8eb727',
 		    'stroke-width': 8,
-		    arc: [pointPosX, pointPosY, 100, 100, 26]
+		    arc: [pointPosX, pointPosY, 0, 100, 26, false]
 		});
+
+		innerCircle.animate({
+			arc: [pointPosX, pointPosY, this.data.customCircle.progress.innerStep, 100, 26, false]
+		}, 1000, "easysin");
 
 		//outer status circle
 		this.paper.circle(pointPosX, pointPosY, 60).attr({
@@ -154,32 +162,6 @@ chartphael.helper.extend(chartphael.bmf.prototype, {
 		}
 
 		this.grid.toBack();
-
-	},
-
-	customArc: function(){
-
-		this.paper.customAttributes.arc = function (xloc, yloc, value, total, R) {
-		    var alpha = 360 / total * value,
-		        a = (90 - alpha) * Math.PI / 180,
-		        x = xloc + R * Math.cos(a),
-		        y = yloc - R * Math.sin(a),
-		        path;
-		    if (total == value) {
-		        path = [
-		            ["M", xloc, yloc - R],
-		            ["A", R, R, 0, 1, 1, xloc - 0.01, yloc - R]
-		        ];
-		    } else {
-		        path = [
-		            ["M", xloc, yloc - R],
-		            ["A", R, R, 0, +(alpha > 180), 1, x, y]
-		        ];
-		    }
-		    return {
-		        path: path
-		    };
-		};
 
 	}
 

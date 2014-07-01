@@ -293,8 +293,89 @@ https://github.com/davoreric/chartphael
 
 })();
 
-chartphael.prototype.drawGrid = function(){
+/* Raphael extend for custom arc attribute */
+Raphael.fn.customArc = function () {
 
-	console.log(1);
-	
+	this.customAttributes.arc = function (xloc, yloc, value, total, R, fill) {
+
+	    var alpha = 360 / total * value,
+	        a = (90 - alpha) * Math.PI / 180,
+	        x = xloc + R * Math.cos(a),
+	        y = yloc - R * Math.sin(a),
+	        path;
+
+    	if (total == value) {
+	        
+	        path = [
+	            ["M", xloc, yloc - R],
+	            ["A", R, R, 0, 1, 1, xloc - 0.01, yloc - R]
+	        ];
+
+	    } else {
+
+	    	if (fill) {
+
+	    		path = [
+		        	["M", xloc, yloc],
+		        	["L", xloc, yloc - R],
+		        	["A", R, R, 0, +(alpha > 180), 1, x, y],
+		        	["L", xloc, yloc]
+		        ];
+
+	    	} else {
+
+	    		path = [
+		            ["M", xloc, yloc - R],
+		            ["A", R, R, 0, +(alpha > 180), 1, x, y]
+		        ];
+
+	    	}
+	        
+	    }
+
+	    return {
+	        path: path
+	    };
+	};
+
+};
+
+/* Raphael extend for Pie graph */
+Raphael.fn.pieChart = function (cx, cy, r, values, colors) {
+    
+    var paper = this,
+    	chart = [],
+    	newValues = [],
+    	total = 0,
+    	attrValue = {};
+
+    for (var i = 0; i < values.length; i++) {
+        if(i==0){
+        	newValues[i] = values[i];
+        } else {
+        	newValues[i] = values[i] + newValues[i-1];
+        }
+        total += values[i];
+    }    
+
+    newValues.reverse();
+    colors.reverse();
+
+    for (var i = 0; i < newValues.length; i++) {
+
+    	chart[i] = paper.path().attr({
+    		"fill": colors[i],
+			"stroke": "#fff",
+			"stroke-width": 1,
+			arc: [cx, cy, 0, total, r, true]
+    	});
+
+        chart[i].animate({
+			arc: [cx, cy, newValues[i], total, r, true]
+		}, 1000, "easysin");
+
+    }
+
+    return chart;
+
 };
