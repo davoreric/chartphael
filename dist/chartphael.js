@@ -48,7 +48,8 @@ https://github.com/davoreric/chartphael
 			var yAxisAmount,
 				yIncrement,
 				yPos,
-				yAxisPath;
+				yAxisPath,
+				yAxisLabel;
 
 			//test for fixed or dynamic steps, and setting steps amount
 			if( this.options.fixedStepY ) {
@@ -58,8 +59,11 @@ https://github.com/davoreric/chartphael
 
 			} else {
 
-				yAxisAmount = this.data.items.length;
+				yAxisLabel = this.data.grid.x.min;
+				yAxisAmount = Math.ceil((this.data.grid.x.max - this.data.grid.x.min) / this.data.grid.x.interval) + 1;
 				yIncrement = this.bound.size.x/(yAxisAmount-1);
+
+				this.gridIncrementY = yIncrement / this.data.grid.x.interval;
 				
 			}
 
@@ -88,8 +92,17 @@ https://github.com/davoreric/chartphael
 		
 			//setting path for Y axis
 			for ( i=0; i<yAxisAmount; i++ ) {
+				
 				var currInc = yIncrement*i*yPos.inc;
 				yAxisPath += 'M'+ (yPos.bottomX+currInc) +' '+ yPos.bottomY +'L'+ (yPos.topX+currInc) +' '+ yPos.topY;
+
+				if (this.options.yAxisText) {
+
+					this.paper.text(yPos.bottomX+currInc, yPos.bottomY+15, yAxisLabel).attr(this.options.gridTextStyle);
+					yAxisLabel += this.data.grid.x.min + this.data.grid.x.interval;
+					
+				}
+
 			}
 
 			return yAxisPath;
@@ -102,7 +115,8 @@ https://github.com/davoreric/chartphael
 			var xAxisAmount,
 				xIncrement,
 				xPos,
-				xAxisPath;
+				xAxisPath,
+				xAxisLabel;
 
 			//test for fixed or dynamic steps, and setting steps amount
 			if( this.options.fixedStepX ) {
@@ -112,8 +126,11 @@ https://github.com/davoreric/chartphael
 
 			} else {
 
-				xAxisAmount = this.data.items.length;
+				xAxisLabel = this.data.grid.y.min;
+				xAxisAmount = Math.ceil((this.data.grid.y.max - this.data.grid.y.min) / this.data.grid.y.interval) +1;
 				xIncrement = this.bound.size.y/(xAxisAmount-1);
+
+				this.gridIncrementX = xIncrement / this.data.grid.y.interval;
 				
 			}
 
@@ -142,8 +159,17 @@ https://github.com/davoreric/chartphael
 		
 			//setting path for Y axis
 			for ( i=0; i<xAxisAmount; i++ ) {
+				
 				var currInc = xIncrement*i*xPos.inc;
 				xAxisPath += 'M'+ xPos.leftX +' '+ (xPos.leftY+currInc) +'L'+ xPos.rightX +' '+ (xPos.rightY+currInc);
+
+				if (this.options.xAxisText) {
+
+					this.paper.text(xPos.leftX-15, xPos.leftY+currInc, xAxisLabel).attr(this.options.gridTextStyle);
+					xAxisLabel += this.data.grid.y.min + this.data.grid.y.interval;
+					
+				}
+
 			}
 
 			return xAxisPath;
@@ -153,9 +179,14 @@ https://github.com/davoreric/chartphael
 		'line': function(setup){
 
 			var items = this.data.items,
-				data = chartphael.helper.getDataRange.call(this,this.data,'y'),
-				dataHeight = data.range,
 				linePath = '';
+
+			if (this.options.fixedStepY) {
+
+				var data = chartphael.helper.getDataRange.call(this,this.data,'y'),
+					dataHeight = data.range;
+
+			}
 
 			for(i=0;i<items.length;i++){
 
@@ -167,10 +198,11 @@ https://github.com/davoreric/chartphael
 
 				} else {
 
-					var pointPosX = this.bound.br.x-currInc,
-						pointPosY = this.bound.bl.y - ((items[i].y - data.min)*(this.bound.size.y/dataHeight));
+					var pointPosX = this.bound.bl.x + items[i].x * this.gridIncrementY,
+						pointPosY = this.bound.bl.y - items[i].y * this.gridIncrementX;
 
 				}
+
 
 				if (setup.dots) {
 
@@ -194,6 +226,17 @@ https://github.com/davoreric/chartphael
 
 				}
 				
+			}
+
+			if( this.options.dropLineShadow	){
+
+				var pointPosXmin = this.bound.bl.x + items[0].x * this.gridIncrementY,
+					pointPosXmax = this.bound.bl.x + items[items.length-1].x * this.gridIncrementY;
+
+				this.paper.path(linePath+'L'+ pointPosXmax +' '+ this.bound.br.y +'L'+ pointPosXmin +' '+ this.bound.br.y).attr({
+					fill: 'rgba(130,156,39,20)', 'stroke-width': 0
+				}).toBack();
+
 			}
 
 			return linePath;

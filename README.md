@@ -33,11 +33,9 @@ Init procedure:
         });
 
         var lineGraph = new chartphael({
-            id: 'line_chart',
+            node: document.getElementById('line_chart'),
             type: 'line',
-            data: lineChartJSON,
-            dataXMax: 24,
-            dataYMax: 175
+            data: lineChartJSON
         });
 
 
@@ -93,7 +91,7 @@ JSON formats:
                 "x": {
                     "interval": 2,
                     "min": 0,
-                    "max": 31
+                    "max": 26
                 },
                 "y": {
                     "interval": 25,
@@ -110,7 +108,7 @@ JSON formats:
                 { "x": 13, "y": 95 },
                 { "x": 18, "y": 100 },
                 { "x": 20, "y": 85 },
-                { "x": 22, "y": 75 },
-                { "x": 24, "y": 95 }
+                { "x": 23, "y": 75 },
+                { "x": 26, "y": 95 }
             ]
         };
