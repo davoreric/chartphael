@@ -13,40 +13,64 @@ https://github.com/davoreric/chartphael
 
 chartphael.arc = function(options) {
 
-	this.node = options.node;
-	this.width = this.node.offsetWidth;
-	this.stroke = 6;
-	this.radius = (this.width - 2*this.stroke)/2;
-	this.center = this.radius + this.stroke;
-	this.colorBkg = '#ccc';
-	this.colorChart = '#8fbb48';
+	//set public options and merge it with passed option object
+	this.options = chartphael.helper.extend({}, chartphael.arc.defaults, options);
 
-	this.paper = Raphael(this.node,this.width,this.width);
+	//set internal data
+	this.node = this.options.node;
+
+	this.paperSize = {
+		'x': this.node.offsetWidth,
+		'y': this.node.offsetHeight
+	};
+
+	this.radius = (this.paperSize.x - 2*this.options.stroke)/2;
+	this.center = this.radius + this.options.stroke;
+	
+	//set SVG paper workarea
+	this.paper = Raphael(this.node,this.paperSize.x,this.paperSize.y);
 
 	//adding custom arc attribute
 	this.paper.customArc();
 
-	this.setBkg();
+	//call method for creating bkg
+	this.setTrack();
+
+	//call method for creating arc graph
 	this.setChart(this.node.getAttribute('data-value'));
-
-}
-
-chartphael.arc.prototype.setBkg = function(){
-
-	var bkg = this.paper.circle(this.center, this.center, this.radius).attr({stroke: this.colorBkg, 'stroke-width': this.stroke});
 
 };
 
-chartphael.arc.prototype.setChart = function(end){
+chartphael.helper.extend(chartphael.arc.prototype, {
 
-	var chart = this.paper.path().attr({
-	    'stroke': this.colorChart,
-	    'stroke-width': this.stroke,
-	    arc: [this.center, this.center, 0, 100, this.radius,false]
-	});
+	setTrack: function(){
+		
+		this.paper.circle(this.center, this.center, this.radius).attr({
+			stroke: this.options.colorBkg,
+			'stroke-width': this.options.stroke
+		});
 
-	chart.animate({
-	    arc: [this.center, this.center, end, 100, this.radius,false]
-	}, 1500, "bounce");
+	},
 
+	setChart: function(end){
+
+		var chart = this.paper.path().attr({
+		    'stroke': this.options.colorChart,
+		    'stroke-width': this.options.stroke,
+		    arc: [this.center, this.center, 0, 100, this.radius,false]
+		});
+
+		chart.animate({
+		    arc: [this.center, this.center, end, 100, this.radius,false]
+		}, 1500, "bounce");
+
+	}
+
+});
+
+//default values
+chartphael.arc.defaults = {
+	stroke: 6,
+	colorBkg: '#ccc',
+	colorChart: '#8fbb48'
 };
