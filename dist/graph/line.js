@@ -52,14 +52,7 @@ chartphael.helper.extend(chartphael.line.prototype, {
 
 	setGraph: function(){
 
-		var setup = {
-			"dots": true,
-			"dotsText": false
-		};
-
-		this.paper.path(
-			chartphael.draw.line.call(this,setup)
-		).attr(this.options.lineStyle).toBack();
+		chartphael.draw.line.call(this);
 
 		this.grid.toBack();
 
@@ -78,6 +71,8 @@ chartphael.line.defaults = {
 	dropLineShadow: true,
 	dataXMax: 24,
     dataYMax: 175,
+    dots: true,
+	dotsText: false,
     padding: {
 		'top': 40,
         'right': 40,

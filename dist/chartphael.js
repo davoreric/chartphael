@@ -157,7 +157,7 @@ https://github.com/davoreric/chartphael
 
 			}
 		
-			//setting path for Y axis
+			//setting path for X axis
 			for ( i=0; i<xAxisAmount; i++ ) {
 				
 				var currInc = xIncrement*i*xPos.inc;
@@ -176,9 +176,10 @@ https://github.com/davoreric/chartphael
 
 		},
 
-		'line': function(setup){
+		'line': function(){
 
 			var items = this.data.items,
+				dotTextBkg = [],
 				linePath = '';
 
 			if (this.options.fixedStepY) {
@@ -204,13 +205,27 @@ https://github.com/davoreric/chartphael
 				}
 
 
-				if (setup.dots) {
+				if (this.options.dots) {
 
 					this.paper.circle(pointPosX, pointPosY, this.options.circleRadius).attr(this.options.circleStyle);	
 
-					if (setup.dotsText) {
+					if (this.options.dotsText) {
 						
-						this.paper.text(pointPosX, pointPosY+this.options.circleRadius*3, items[i].y).attr(this.options.circleTextStyle);
+						var dotText = this.paper.text(pointPosX, pointPosY+this.options.circleRadius*3, items[i].y).attr(this.options.circleTextStyle);
+
+						if(this.options.circleTextBkg) {
+
+							var rectWidth = dotText.getBBox().width + 2,
+								rectHeight = dotText.getBBox().height + 2,
+								rectPointPosX = pointPosX-rectWidth/2,
+								rectPointPosY = (pointPosY+this.options.circleRadius*3)-rectHeight/2;
+
+							dotTextBkg[i] = this.paper.rect(rectPointPosX, rectPointPosY, rectWidth, rectHeight).attr({
+								'fill': this.options.circleTextBkg.fill,
+								'stroke-width': 0
+							}).toBack();
+
+						}
 
 					}
 
@@ -239,6 +254,12 @@ https://github.com/davoreric/chartphael
 
 			}
 
+			this.paper.path(linePath).attr(this.options.lineStyle).toBack();
+
+			for(n=0;n<dotTextBkg.length;n++){
+				dotTextBkg[n].toBack();	
+			}
+			
 			return linePath;
 
 		}
@@ -415,7 +436,7 @@ Raphael.fn.pieChart = function (cx, cy, r, values, colors) {
 
         chart[i].animate({
 			arc: [cx, cy, newValues[i], total, r, true]
-		}, 1000, "easysin");
+		}, 500, "easysin");
 
     }
 

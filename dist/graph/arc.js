@@ -33,24 +33,12 @@ chartphael.arc = function(options) {
 	//adding custom arc attribute
 	this.paper.customArc();
 
-	//call method for creating bkg
-	this.setTrack();
-
 	//call method for creating arc graph
 	this.setChart(this.node.getAttribute('data-value'));
 
 };
 
 chartphael.helper.extend(chartphael.arc.prototype, {
-
-	setTrack: function(){
-		
-		this.paper.circle(this.center, this.center, this.radius).attr({
-			stroke: this.options.colorBkg,
-			'stroke-width': this.options.stroke
-		});
-
-	},
 
 	setChart: function(end){
 
@@ -62,7 +50,7 @@ chartphael.helper.extend(chartphael.arc.prototype, {
 
 		chart.animate({
 		    arc: [this.center, this.center, end, 100, this.radius,false]
-		}, 1500, "bounce");
+		}, 500, "easysin");
 
 	}
 
@@ -70,7 +58,6 @@ chartphael.helper.extend(chartphael.arc.prototype, {
 
 //default values
 chartphael.arc.defaults = {
-	stroke: 6,
-	colorBkg: '#ccc',
+	stroke: 5,
 	colorChart: '#8fbb48'
 };

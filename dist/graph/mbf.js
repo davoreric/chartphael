@@ -72,14 +72,7 @@ chartphael.helper.extend(chartphael.bmf.prototype, {
 
 	setGraph: function(){
 
-		var setup = {
-			"dots": true,
-			"dotsText": true
-		};
-
-		this.paper.path(
-			chartphael.draw.line.call(this,setup)
-		).attr(this.options.lineStyle).toBack();		
+		chartphael.draw.line.call(this);
 
 	},
 
@@ -91,7 +84,7 @@ chartphael.helper.extend(chartphael.bmf.prototype, {
 			pointPosY = this.bound.br.y - ((this.data.items[0].y - rangeData.min)*(this.bound.size.y/dataHeight));
 
 		//background
-		this.paper.circle(pointPosX, pointPosY, 70).attr({
+		this.paper.circle(pointPosX, pointPosY, 71).attr({
 			'fill': '#fff',
 			'stroke-width': 0
 		});
@@ -118,7 +111,7 @@ chartphael.helper.extend(chartphael.bmf.prototype, {
 		}
 
 		//text
-		this.paper.text(pointPosX, pointPosY, this.data.items[this.data.items.length-1].y).attr({
+		this.paper.text(pointPosX, pointPosY, this.data.items[0].y).attr({
 			'fill': '#8eb727',
 			'font-size':'14px'
 		});
@@ -132,7 +125,7 @@ chartphael.helper.extend(chartphael.bmf.prototype, {
 
 		innerCircle.animate({
 			arc: [pointPosX, pointPosY, this.data.customCircle.progress.innerStep, 100, 26, false]
-		}, 1000, "easysin");
+		}, 500, "easysin");
 
 		//outer status circle
 		this.paper.circle(pointPosX, pointPosY, 60).attr({
@@ -154,10 +147,29 @@ chartphael.helper.extend(chartphael.bmf.prototype, {
 
 			var tempY = this.bound.br.y - ((infoAxis[i].coord.y - rangeData.min)*(this.bound.size.y/dataHeight))
 
-			this.paper.path('M'+this.bound.bl.x+' '+tempY+'L'+this.paperSize.x+' '+tempY).attr({
+			var line = this.paper.path('M'+this.bound.bl.x+' '+tempY+'L'+this.paperSize.x+' '+tempY).attr({
 				'stroke': infoAxis[i].color,
 				'stroke-width': 1
 			}).toBack();
+
+			var lineText = this.paper.text(this.bound.bl.x + 20, tempY, infoAxis[i].coord.y).attr({
+				'fill': infoAxis[i].color,
+				'font-size':'12px',
+				'text-anchor': 'start'
+			});
+
+			var rectWidth = lineText.getBBox().width + 4,
+				rectHeight = lineText.getBBox().height + 2,
+				rectPointPosX = (this.bound.bl.x + 20) - 2,
+				rectPointPosY = tempY-rectHeight/2;
+
+			var lineTextBkg = this.paper.rect(rectPointPosX, rectPointPosY, rectWidth, rectHeight).attr({
+				'fill': this.options.circleTextBkg.fill,
+				'stroke-width': 0
+			});
+			
+			lineTextBkg.toBack();
+			line.toBack();
 
 		}
 
@@ -176,6 +188,8 @@ chartphael.bmf.defaults = {
 	directionY: 'left',
 	directionX: 'bottom',
 	dimensions: false,
+	dots: true,
+	dotsText: true,
 	bound: {
 		'x': 0,
 		'y': 100
@@ -197,11 +211,14 @@ chartphael.bmf.defaults = {
 	circleRadius: 8,
 	circleStyle: {
 		'fill': '#819926',
-		'stroke-width': 3,
+		'stroke-width': 4,
 		'stroke': '#fff'
 	},
 	circleTextStyle: {
 		'fill': '#fff',
 		'font-size':'15px'
+	},
+	circleTextBkg: {
+		'fill': '#8fb727'
 	}
 };
