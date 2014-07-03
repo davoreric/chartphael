@@ -117,7 +117,7 @@ chartphael.helper.extend(chartphael.bmf.prototype, {
 			'font-size':'19px',
 			'stroke': '#8eb727',
 			'stroke-width': 0,
-			'font-family': this.options.globalFont
+			'font-family': this.options.dots.text.style['font-family']
 		});
 
 		//inner status circle
@@ -165,7 +165,7 @@ chartphael.helper.extend(chartphael.bmf.prototype, {
 				'text-anchor': 'start',
 				'stroke-width': 0,
 				'stroke': infoAxis[i].color,
-				'font-family': this.options.globalFont
+				'font-family': this.options.dots.text.style['font-family']
 			});
 
 			var rectWidth = lineText.getBBox().width + 4,
@@ -208,7 +208,7 @@ chartphael.bmf.defaults = {
 	xAxis: {
 		show: false,
 		text: false,
-		step: 150,
+		step: 160,
 		outerLines: true,
 		direction: 'bottom'
 	},	
@@ -216,7 +216,7 @@ chartphael.bmf.defaults = {
 	yAxis: {
 		show: true,
 		text: false,
-		step: 150,
+		step: 160,
 		outerLines: true,
 		direction: 'right'
 	},
@@ -264,11 +264,9 @@ chartphael.bmf.defaults = {
 		}
 	},
 
-	globalFont: '"Open Sans Condensed",Arial,sans-serif',
-
 	padding: {
 		'top': 125,
-        'right': 100,
+        'right': 90,
         'bottom': 100,
         'left': 0
 	}
