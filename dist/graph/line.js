@@ -31,15 +31,22 @@ chartphael.line = function(options) {
 	//set SVG paper workarea
 	this.paper = Raphael(this.node,this.paperSize.x,this.paperSize.y);
 
-	//call method for creating grid
-	this.setGrid();
-
-	//call method for creating line graph
-	this.setGraph();
+	//start
+	this.init();
 
 };
 
 chartphael.helper.extend(chartphael.line.prototype, {
+
+	init: function(){
+
+		//call method for creating grid
+		this.setGrid();
+
+		//call method for creating line graph
+		this.setGraph();
+
+	},
 
 	setGrid: function(){
 
@@ -55,6 +62,19 @@ chartphael.helper.extend(chartphael.line.prototype, {
 		chartphael.draw.line.call(this);
 
 		this.grid.toBack();
+
+	},
+
+	updateJSON: function(json){
+
+		//replace current JSON
+		this.data = json;
+
+		//clear paper
+		this.paper.clear();
+
+		//draw chart
+		this.init();
 
 	}
 

@@ -13,8 +13,6 @@ https://github.com/davoreric/chartphael
 
 chartphael.bmf = function(options) {
 
-	var self = this;
-
 	//set public options and merge it with passed option object
 	this.options = chartphael.helper.extend({}, chartphael.bmf.defaults, options);
 
@@ -47,21 +45,28 @@ chartphael.bmf = function(options) {
 	//adding custom arc attribute
 	this.paper.customArc();
 
-	//call method for creating grid
-	this.setGrid();
-
-	//call method for creating line graph
-	this.setGraph();
-
-	//call method for creating custom dot
-	this.setCustomCircle();
-
-	//call method for creating additional Y axis
-	this.setInfoAxis();
+	//start
+	this.init();
 
 };
 
 chartphael.helper.extend(chartphael.bmf.prototype, {
+
+	init: function(){
+
+		//call method for creating grid
+		this.setGrid();
+
+		//call method for creating line graph
+		this.setGraph();
+
+		//call method for creating custom dot
+		this.setCustomCircle();
+
+		//call method for creating additional Y axis
+		this.setInfoAxis();
+
+	},
 
 	setGrid: function(){
 
@@ -186,9 +191,16 @@ chartphael.helper.extend(chartphael.bmf.prototype, {
 
 	},
 
-	updataData: function(){
+	updateJSON: function(json){
 
-		console.log('update!!');
+		//replace current JSON
+		this.data = json;
+
+		//clear paper
+		this.paper.clear();
+
+		//draw chart
+		this.init();
 
 	}
 

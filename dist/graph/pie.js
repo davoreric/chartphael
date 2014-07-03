@@ -35,12 +35,19 @@ chartphael.pie = function(options) {
 	//adding custom arc attribute
 	this.paper.customArc();
 
-	//call method for creating pie graph
-	this.setPie();
+	//start
+	this.init();
 
 };
 
 chartphael.helper.extend(chartphael.pie.prototype, {
+
+	init: function(){
+
+		//call method for creating pie graph
+		this.setPie();
+
+	},
 
 	setPie: function(){
 
@@ -53,6 +60,19 @@ chartphael.helper.extend(chartphael.pie.prototype, {
 		}
 		
 		this.paper.pieChart(this.centerX, this.centerY, this.radius, values, colors, true);
+
+	},
+
+	updateJSON: function(json){
+
+		//replace current JSON
+		this.data = json;
+
+		//clear paper
+		this.paper.clear();
+
+		//draw chart
+		this.init();
 
 	}
 

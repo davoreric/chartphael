@@ -33,12 +33,19 @@ chartphael.arc = function(options) {
 	//adding custom arc attribute
 	this.paper.customArc();
 
-	//call method for creating arc graph
-	this.setChart(this.node.getAttribute('data-value'));
+	//start
+	this.init();
 
 };
 
 chartphael.helper.extend(chartphael.arc.prototype, {
+
+	init: function(){
+
+		//call method for creating arc graph
+		this.setChart(this.node.getAttribute('data-value'));
+
+	},
 
 	setChart: function(end){
 
@@ -51,6 +58,19 @@ chartphael.helper.extend(chartphael.arc.prototype, {
 		chart.animate({
 		    arc: [this.center, this.center, end, 100, this.radius,false]
 		}, 500, "easysin");
+
+	},
+
+	updateJSON: function(json){
+
+		//replace current JSON
+		this.data = json;
+
+		//clear paper
+		this.paper.clear();
+
+		//draw chart
+		this.init();
 
 	}
 
