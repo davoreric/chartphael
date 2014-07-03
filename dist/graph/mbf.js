@@ -20,21 +20,10 @@ chartphael.bmf = function(options) {
 	this.node = this.options.node;
 	this.data = this.options.data;
 
-	if(this.options.dimensions){
-
-		this.paperSize = {
-			'x': this.options.dimensions.width,
-			'y': this.options.dimensions.height
-		};
-
-	} else {
-
-		this.paperSize = {
-			'x': this.node.offsetWidth,
-			'y': this.node.offsetHeight
-		};
-
-	}
+	this.paperSize = {
+		'x': this.node.offsetWidth,
+		'y': this.node.offsetHeight
+	};
 
 	//get boundary coordinates for grid and graph
 	this.bound = chartphael.helper.getBound.call(this,this.paperSize,this.options.padding);
@@ -73,7 +62,7 @@ chartphael.helper.extend(chartphael.bmf.prototype, {
 		//call global grid create function and apply styles
 		this.grid = this.paper.path(
 			chartphael.draw.grid.call(this)
-		).attr(this.options.gridStyle);
+		).attr(this.options.grid.style);
 
 	},
 
@@ -178,7 +167,7 @@ chartphael.helper.extend(chartphael.bmf.prototype, {
 				rectPointPosY = tempY-rectHeight/2;
 
 			var lineTextBkg = this.paper.rect(rectPointPosX, rectPointPosY, rectWidth, rectHeight).attr({
-				'fill': this.options.circleTextBkg.fill,
+				'fill': this.options.dots.text.bkg,
 				'stroke-width': 0
 			});
 			
@@ -208,46 +197,70 @@ chartphael.helper.extend(chartphael.bmf.prototype, {
 
 //default values
 chartphael.bmf.defaults = {
-	fixedStepX: false,
-	fixedStepY: false,
-	xAxis: true,
-	yAxis: true,
-	directionY: 'left',
-	directionX: 'bottom',
-	dimensions: false,
-	dots: true,
-	dotsText: true,
-	bound: {
+
+	xAxis: {
+		show: false,
+		text: false,
+		step: 150,
+		outerLines: false,
+		direction: 'right'
+	},	
+
+	yAxis: {
+		show: true,
+		text: false,
+		step: 150,
+		outerLines: true,
+		direction: 'bottom'
+	},
+
+	grid: {
+		style: {
+			stroke: '#84aa20',
+			strokeWidth: 1
+		}
+	},
+
+	boundRange: {
 		'x': 0,
 		'y': 100
 	},
+
+	line: {
+		shadow: {
+			show: true
+		},
+		style: {
+			'stroke': '#fff',
+			'stroke-width': 4
+		}
+	},
+
+	dots: {
+		show: true,
+		radius: 8,
+		style: {
+			'fill': '#819926',
+			'stroke-width': 4,
+			'stroke': '#fff'
+		},
+		text: {
+			show: true,
+			bkg: '#8fb727',
+			style: {
+				'fill': '#fff',
+				'font-size':'14px',
+				'stroke-width': .5,
+				'stroke': '#fff'
+			}
+		}
+	},
+
 	padding: {
-		'top': 50,
-        'right': 50,
-        'bottom': 50,
-        'left': 50
-	},
-	gridStyle: {
-		'stroke': '#84aa20',
-		'stroke-width': 1
-	},
-	lineStyle: {
-		'stroke': '#fff',
-		'stroke-width': 4
-	},
-	circleRadius: 8,
-	circleStyle: {
-		'fill': '#819926',
-		'stroke-width': 4,
-		'stroke': '#fff'
-	},
-	circleTextStyle: {
-		'fill': '#fff',
-		'font-size':'14px',
-		'stroke-width': .5,
-		'stroke': '#fff'
-	},
-	circleTextBkg: {
-		'fill': '#8fb727'
+		'top': 125,
+        'right': 100,
+        'bottom': 100,
+        'left': 0
 	}
+
 };

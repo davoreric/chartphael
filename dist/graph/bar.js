@@ -8,13 +8,13 @@ https://github.com/davoreric/chartphael
 ************************************************/
 
 /************************************************
-*********** Line graph **************************
+*********** Bar graph **************************
 ************************************************/
 
-chartphael.line = function(options) {
+chartphael.bar = function(options) {
 
 	//set public options and merge it with passed option object
-	this.options = chartphael.helper.extend({}, chartphael.line.defaults, options);
+	this.options = chartphael.helper.extend({}, chartphael.bar.defaults, options);
 
 	//set internal data
 	this.node = this.options.node;
@@ -36,14 +36,14 @@ chartphael.line = function(options) {
 
 };
 
-chartphael.helper.extend(chartphael.line.prototype, {
+chartphael.helper.extend(chartphael.bar.prototype, {
 
 	init: function(){
 
 		//call method for creating grid
 		this.setGrid();
 
-		//call method for creating line graph
+		//call method for creating bar graph
 		this.setGraph();
 
 	},
@@ -59,7 +59,7 @@ chartphael.helper.extend(chartphael.line.prototype, {
 
 	setGraph: function(){
 
-		chartphael.draw.line.call(this);
+		chartphael.draw.bar.call(this);
 
 		this.grid.toBack();
 
@@ -81,24 +81,20 @@ chartphael.helper.extend(chartphael.line.prototype, {
 });
 
 //default values
-chartphael.line.defaults = {
+chartphael.bar.defaults = {
 
 	//setup X axis
 	xAxis: {
 		show: true,
 		text: true,
 		step: false,
-		outerLines: false,
+		outerLines: true,
 		direction: 'left'
 	},
 	
 	//setup Y axis
 	yAxis: {
-		show: true,
-		text: true,
-		step: false,
-		outerLines: false,
-		direction: 'bottom'
+		show: false
 	},
 
 	//setup grid
@@ -116,27 +112,18 @@ chartphael.line.defaults = {
 		}
 	},
 
-	//setup chart line
-	line: {
-		shadow: {
-			show: true,
-			fill: 'rgba(130,156,39,20)'
-		},
+	//setup chart bar
+	bar: {
 		style: {
 			'stroke': '#8cb428',
-			'stroke-width': 3
+			'stroke-width': 20,
+			'fill': '#8cb428'
 		}
 	},
 
 	//setup chart dots
 	dots: {
-		show: true,
-		radius: 5,
-		style: {
-			'fill': '#819926',
-			'stroke-width': 2,
-			'stroke': '#fff'
-		},
+		show: false,
 		text: {
 			show: false
 		}

@@ -24,19 +24,39 @@ https://github.com/davoreric/chartphael
 
 			var path;
 
-			//checking if grid has Y axis
-			if (this.options.yAxis) {
+			//setup x increment needed for grid and chart
+			if( this.options.xAxis.step ) {
+				
+				this.xAxisAmount = Math.ceil(this.bound.size.y/this.options.xAxis.step);
+				this.xIncrement = this.options.xAxis.step;
 
-				path = chartphael.draw.gridY.call(this);
+			} else {
 
+				this.xAxisAmount = Math.ceil((this.data.grid.y.max - this.data.grid.y.min) / this.data.grid.y.interval) +1;
+				this.xIncrement = this.bound.size.y/(this.xAxisAmount-1);
+				this.gridIncrementX = this.xIncrement / this.data.grid.y.interval;
+				
+			}
+
+			//setup y increment needed for grid and chart
+			if( this.options.yAxis.step ) {
+				
+				this.yAxisAmount = Math.ceil(this.bound.size.x/this.options.yAxis.step);
+				this.yIncrement = this.options.yAxis.step;
+
+			} else {
+
+				this.yAxisAmount = Math.ceil((this.data.grid.x.max - this.data.grid.x.min) / this.data.grid.x.interval) + 1;
+				this.yIncrement = this.bound.size.x/(this.yAxisAmount-1);
+				this.gridIncrementY = this.yIncrement / this.data.grid.x.interval;
+				
 			}
 
 			//checking if grid has X axis
-			if (this.options.xAxis) {
+			path += chartphael.draw.gridX.call(this);
 
-				path = path + chartphael.draw.gridX.call(this);
-
-			}
+			//checking if grid has Y axis
+			path += chartphael.draw.gridY.call(this);
 
 			return path;
 
@@ -45,30 +65,19 @@ https://github.com/davoreric/chartphael
 		'gridY': function(){
 
 			//var definition
-			var yAxisAmount,
-				yIncrement,
-				yPos,
-				yAxisPath,
+			var	yPos,
+				yAxisPath = '',
 				yAxisLabel;
 
-			//test for fixed or dynamic steps, and setting steps amount
-			if( this.options.fixedStepY ) {
-				
-				yAxisAmount = Math.ceil(this.bound.size.x/this.options.fixedStepY);
-				yIncrement = this.options.fixedStepY;
-
-			} else {
+			//if axis has text, set first value
+			if (this.options.xAxis.text) {
 
 				yAxisLabel = this.data.grid.x.min;
-				yAxisAmount = Math.ceil((this.data.grid.x.max - this.data.grid.x.min) / this.data.grid.x.interval) + 1;
-				yIncrement = this.bound.size.x/(yAxisAmount-1);
-
-				this.gridIncrementY = yIncrement / this.data.grid.x.interval;
 				
 			}
 
 			//setting direction (left is default)
-			if ( this.options.directionY === 'right' ) {
+			if ( this.options.yAxis.direction === 'right' ) {
 
 				yPos = {
 					inc: -1,
@@ -91,14 +100,21 @@ https://github.com/davoreric/chartphael
 			}
 		
 			//setting path for Y axis
-			for ( i=0; i<yAxisAmount; i++ ) {
+
+			for ( i=0; i<this.yAxisAmount; i++ ) {
 				
-				var currInc = yIncrement*i*yPos.inc;
-				yAxisPath += 'M'+ (yPos.bottomX+currInc) +' '+ yPos.bottomY +'L'+ (yPos.topX+currInc) +' '+ yPos.topY;
+				var currInc = this.yIncrement*i*yPos.inc;
 
-				if (this.options.yAxisText) {
+				//this checks if Y grid has outer lines set to false and then does not draws first and last axis
+				if ( !((i==0 || i==this.yAxisAmount-1) && !this.options.yAxis.outerLines) && this.options.yAxis.show ) {
 
-					this.paper.text(yPos.bottomX+currInc, yPos.bottomY+15, yAxisLabel).attr(this.options.gridTextStyle);
+					yAxisPath += 'M'+ (yPos.bottomX+currInc) +' '+ yPos.bottomY +'L'+ (yPos.topX+currInc) +' '+ yPos.topY;
+
+				}
+
+				if (this.options.xAxis.text) {
+
+					this.paper.text(yPos.bottomX+currInc, yPos.bottomY+15, yAxisLabel).attr(this.options.grid.text.style);
 					yAxisLabel += this.data.grid.x.min + this.data.grid.x.interval;
 					
 				}
@@ -112,30 +128,17 @@ https://github.com/davoreric/chartphael
 		'gridX': function(){
 
 			//var definition
-			var xAxisAmount,
-				xIncrement,
-				xPos,
-				xAxisPath,
-				xAxisLabel;
+			var xPos,
+				xAxisPath = '',
+				xAxisLabel;	
 
-			//test for fixed or dynamic steps, and setting steps amount
-			if( this.options.fixedStepX ) {
-				
-				xAxisAmount = Math.ceil(this.bound.size.y/this.options.fixedStepX);
-				xIncrement = this.options.fixedStepX;
-
-			} else {
-
+			//if axis has text, set first value
+			if (this.options.yAxis.text) {
 				xAxisLabel = this.data.grid.y.min;
-				xAxisAmount = Math.ceil((this.data.grid.y.max - this.data.grid.y.min) / this.data.grid.y.interval) +1;
-				xIncrement = this.bound.size.y/(xAxisAmount-1);
-
-				this.gridIncrementX = xIncrement / this.data.grid.y.interval;
-				
 			}
 
 			//setting direction (bottom is default)
-			if ( this.options.directionX === 'top' ) {
+			if ( this.options.xAxis.direction === 'top' ) {
 
 				xPos = {
 					inc: 1,
@@ -158,14 +161,20 @@ https://github.com/davoreric/chartphael
 			}
 		
 			//setting path for X axis
-			for ( i=0; i<xAxisAmount; i++ ) {
-				
-				var currInc = xIncrement*i*xPos.inc;
-				xAxisPath += 'M'+ xPos.leftX +' '+ (xPos.leftY+currInc) +'L'+ xPos.rightX +' '+ (xPos.rightY+currInc);
+			for ( i=0; i<this.xAxisAmount; i++ ) {
 
-				if (this.options.xAxisText) {
+				var currInc = this.xIncrement*i*xPos.inc;
 
-					this.paper.text(xPos.leftX-15, xPos.leftY+currInc, xAxisLabel).attr(this.options.gridTextStyle);
+				//this checks if X grid has outer lines set to false and then does not draws first and last axis
+				if ( !((i==0 || i==this.xAxisAmount-1) && !this.options.xAxis.outerLines) && this.options.xAxis.show ) {
+
+					xAxisPath += 'M'+ xPos.leftX +' '+ (xPos.leftY+currInc) +'L'+ xPos.rightX +' '+ (xPos.rightY+currInc);
+
+				}
+
+				if (this.options.yAxis.text) {
+
+					this.paper.text(xPos.leftX-15, xPos.leftY+currInc, xAxisLabel).attr(this.options.grid.text.style);
 					xAxisLabel += this.data.grid.y.min + this.data.grid.y.interval;
 					
 				}
@@ -182,7 +191,7 @@ https://github.com/davoreric/chartphael
 				dotTextBkg = [],
 				linePath = '';
 
-			if (this.options.fixedStepY) {
+			if (this.options.yAxis.step) {
 
 				var data = chartphael.helper.getDataRange.call(this,this.data,'y'),
 					dataHeight = data.range;
@@ -191,9 +200,9 @@ https://github.com/davoreric/chartphael
 
 			for(i=0;i<items.length;i++){
 
-				if (this.options.fixedStepY) {
+				if (this.options.yAxis.step) {
 
-					var currInc = this.options.fixedStepY*i,
+					var currInc = this.options.yAxis.step*i,
 						pointPosX = this.bound.br.x-currInc,
 						pointPosY = this.bound.br.y - ((items[i].y - data.min)*(this.bound.size.y/dataHeight));
 
@@ -204,33 +213,6 @@ https://github.com/davoreric/chartphael
 
 				}
 
-
-				if (this.options.dots) {
-
-					this.paper.circle(pointPosX, pointPosY, this.options.circleRadius).attr(this.options.circleStyle);	
-
-					if (this.options.dotsText) {
-						
-						var dotText = this.paper.text(pointPosX, pointPosY+this.options.circleRadius*3, items[i].y).attr(this.options.circleTextStyle);
-
-						if(this.options.circleTextBkg) {
-
-							var rectWidth = dotText.getBBox().width + 2,
-								rectHeight = dotText.getBBox().height + 2,
-								rectPointPosX = pointPosX-rectWidth/2,
-								rectPointPosY = (pointPosY+this.options.circleRadius*3)-rectHeight/2;
-
-							dotTextBkg[i] = this.paper.rect(rectPointPosX, rectPointPosY, rectWidth, rectHeight).attr({
-								'fill': this.options.circleTextBkg.fill,
-								'stroke-width': 0
-							}).toBack();
-
-						}
-
-					}
-
-				}				
-				
 				if (i==0) {
 
 					linePath += 'M'+ pointPosX +' '+ pointPosY;
@@ -240,27 +222,58 @@ https://github.com/davoreric/chartphael
 					linePath += 'L'+ pointPosX +' '+ pointPosY;
 
 				}
+
+
+				if (this.options.dots.show) {
+
+					//this checks if X grid has outer lines set to false and then does not draws first and last dots
+					if ( !((i==0 || i==items.length-1) && !this.options.xAxis.outerLines) ) {
+
+						this.paper.circle(pointPosX, pointPosY, this.options.dots.radius).attr(this.options.dots.style);	
+
+						if (this.options.dots.text.show) {
+							
+							var dotText = this.paper.text(pointPosX, pointPosY+this.options.dots.radius*3, items[i].y).attr(this.options.dots.text.style);
+
+							if(this.options.circleTextBkg) {
+
+								var rectWidth = dotText.getBBox().width + 2,
+									rectHeight = dotText.getBBox().height + 2,
+									rectPointPosX = pointPosX-rectWidth/2,
+									rectPointPosY = (pointPosY+this.options.dots.radius*3)-rectHeight/2;
+
+								dotTextBkg[i] = this.paper.rect(rectPointPosX, rectPointPosY, rectWidth, rectHeight).attr({
+									'fill': this.options.circleTextBkg.fill,
+									'stroke-width': 0
+								}).toBack();
+
+							}
+
+						}
+
+					}
+
+				}
 				
 			}
 
-			if( this.options.dropLineShadow	){
+			if( this.options.line.shadow.show ){
 
 				var pointPosXmin = this.bound.bl.x + items[0].x * this.gridIncrementY,
 					pointPosXmax = this.bound.bl.x + items[items.length-1].x * this.gridIncrementY;
 
 				this.paper.path(linePath+'L'+ pointPosXmax +' '+ this.bound.br.y +'L'+ pointPosXmin +' '+ this.bound.br.y).attr({
-					fill: 'rgba(130,156,39,20)', 'stroke-width': 0
+					fill: this.options.line.shadow.fill,
+					'stroke-width': 0
 				}).toBack();
 
 			}
 
-			this.paper.path(linePath).attr(this.options.lineStyle).toBack();
+			this.paper.path(linePath).attr(this.options.line.style).toBack();
 
 			for(n=0;n<dotTextBkg.length;n++){
 				dotTextBkg[n].toBack();	
 			}
-			
-			return linePath;
 
 		},
 
@@ -278,96 +291,9 @@ https://github.com/davoreric/chartphael
 				
 			}
 
-			this.paper.path(barPath).attr(this.options.barStyle).toBack();
+			this.paper.path(barPath).attr(this.options.bar.style).toBack();
 			
 			return barPath;
-
-		}
-
-	};
-
-	chartphael.helper = {
-		
-		'getBound': function(paperSize,padding){
-
-			var bound = {
-				'tl': {
-					'x': padding.left,
-					'y': padding.top
-				},
-				'tr': {
-					'x': paperSize.x-padding.right,
-					'y': padding.top
-				},
-				'br': {
-					'x': paperSize.x-padding.right,
-					'y': paperSize.y-padding.bottom
-				},
-				'bl': {
-					'x': padding.left,
-					'y': paperSize.y-padding.bottom
-				},
-				'size': {
-					'x': paperSize.x - (padding.left + padding.right),
-					'y': paperSize.y - (padding.top + padding.bottom)
-				}
-			}
-
-			return bound;
-
-		},
-
-		'getDataRange': function(data){
-
-			var dataRange = new Array(),
-				range = data.items;
-
-			for (i=0;i<range.length;i++) {
-				
-				dataRange.push(range[i].y);
-
-			}
-
-			if(data.infoAxis) {
-
-				for (i=0;i<data.infoAxis.length;i++) {
-					
-					dataRange.push(data.infoAxis[i].coord.y);
-
-				}
-
-			}
-
-			var min = Math.min.apply(Math, dataRange),
-				max = Math.max.apply(Math, dataRange);
-
-			if ( this.options.bound ) {
-				min = min - this.options.bound.y;
-				max = max + this.options.bound.y;
-			}
-
-			return {
-				"min": min,
-				"max": max,
-				"range": max - min
-			};
-
-		},
-
-		'extend': function(obj) {
-
-			var tempArray = Array.prototype.slice.call(arguments, 1);
-
-			for (i=0;i<tempArray.length;i++){
-				var source = tempArray[i];
-				if (source) {
-					for (var prop in source) {
-						obj[prop] = source[prop];
-					}
-				}
-			}
-
-			return obj;
 
 		}
 
@@ -376,6 +302,94 @@ https://github.com/davoreric/chartphael
 	window.chartphael = chartphael;
 
 })();
+
+//helper methods for chartphael
+chartphael.helper = {
+		
+	'getBound': function(paperSize,padding){
+
+		var bound = {
+			'tl': {
+				'x': padding.left,
+				'y': padding.top
+			},
+			'tr': {
+				'x': paperSize.x-padding.right,
+				'y': padding.top
+			},
+			'br': {
+				'x': paperSize.x-padding.right,
+				'y': paperSize.y-padding.bottom
+			},
+			'bl': {
+				'x': padding.left,
+				'y': paperSize.y-padding.bottom
+			},
+			'size': {
+				'x': paperSize.x - (padding.left + padding.right),
+				'y': paperSize.y - (padding.top + padding.bottom)
+			}
+		}
+
+		return bound;
+
+	},
+
+	'getDataRange': function(data){
+
+		var dataRange = new Array(),
+			range = data.items;
+
+		for (i=0;i<range.length;i++) {
+			
+			dataRange.push(range[i].y);
+
+		}
+
+		if(data.infoAxis) {
+
+			for (i=0;i<data.infoAxis.length;i++) {
+				
+				dataRange.push(data.infoAxis[i].coord.y);
+
+			}
+
+		}
+
+		var min = Math.min.apply(Math, dataRange),
+			max = Math.max.apply(Math, dataRange);
+
+		if ( this.options.boundRange ) {
+			min = min - this.options.boundRange.y;
+			max = max + this.options.boundRange.y;
+		}
+
+		return {
+			"min": min,
+			"max": max,
+			"range": max - min
+		};
+
+	},
+
+	'extend': function(obj) {
+
+		var tempArray = Array.prototype.slice.call(arguments, 1);
+
+		for (i=0;i<tempArray.length;i++){
+			var source = tempArray[i];
+			if (source) {
+				for (var prop in source) {
+					obj[prop] = source[prop];
+				}
+			}
+		}
+
+		return obj;
+
+	}
+
+};
 
 /* Raphael extend for custom arc attribute */
 Raphael.fn.customArc = function () {
