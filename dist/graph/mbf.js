@@ -13,6 +13,8 @@ https://github.com/davoreric/chartphael
 
 chartphael.bmf = function(options) {
 
+	var self = this;
+
 	//set public options and merge it with passed option object
 	this.options = chartphael.helper.extend({}, chartphael.bmf.defaults, options);
 
@@ -84,7 +86,7 @@ chartphael.helper.extend(chartphael.bmf.prototype, {
 			pointPosY = this.bound.br.y - ((this.data.items[0].y - rangeData.min)*(this.bound.size.y/dataHeight));
 
 		//background
-		this.paper.circle(pointPosX, pointPosY, 71).attr({
+		this.paper.circle(pointPosX, pointPosY, 70).attr({
 			'fill': '#fff',
 			'stroke-width': 0
 		});
@@ -103,7 +105,7 @@ chartphael.helper.extend(chartphael.bmf.prototype, {
 
 			this.paper.pieChart(pointPosX, pointPosY, 50, values, colors);
 
-			this.paper.circle(pointPosX, pointPosY, 38).attr({
+			this.paper.circle(pointPosX, pointPosY, 39).attr({
 				'fill': '#fff',
 				'stroke-width': 0
 			});
@@ -113,27 +115,32 @@ chartphael.helper.extend(chartphael.bmf.prototype, {
 		//text
 		this.paper.text(pointPosX, pointPosY, this.data.items[0].y).attr({
 			'fill': '#8eb727',
-			'font-size':'14px'
+			'font-size':'15px',
+			'stroke': '#8eb727',
+			'stroke-width': .5
 		});
 
 		//inner status circle
 		var innerCircle = this.paper.path().attr({
 		    'stroke': '#8eb727',
 		    'stroke-width': 8,
-		    arc: [pointPosX, pointPosY, 0, 100, 26, false]
+		    arc: [pointPosX, pointPosY, 0, 100, 28, false]
 		});
 
 		innerCircle.animate({
-			arc: [pointPosX, pointPosY, this.data.customCircle.progress.innerStep, 100, 26, false]
+			arc: [pointPosX, pointPosY, this.data.customCircle.progress.innerStep, 100, 28, false]
 		}, 500, "easysin");
 
 		//outer status circle
-		this.paper.circle(pointPosX, pointPosY, 60).attr({
+		var outerCircle = this.paper.circle(pointPosX, pointPosY, 60).attr({
 			'fill': 'transparent',
 			'stroke': this.data.customCircle.statusColor,
 			'stroke-width': '7',
 			'stroke-dasharray': '.'
 		});
+
+		outerCircle.node.setAttribute('stroke-dasharray','7,1.95');
+		
 
 	},
 
@@ -155,7 +162,9 @@ chartphael.helper.extend(chartphael.bmf.prototype, {
 			var lineText = this.paper.text(this.bound.bl.x + 20, tempY, infoAxis[i].coord.y).attr({
 				'fill': infoAxis[i].color,
 				'font-size':'12px',
-				'text-anchor': 'start'
+				'text-anchor': 'start',
+				'stroke-width': .5,
+				'stroke': infoAxis[i].color
 			});
 
 			var rectWidth = lineText.getBBox().width + 4,
@@ -174,6 +183,12 @@ chartphael.helper.extend(chartphael.bmf.prototype, {
 		}
 
 		this.grid.toBack();
+
+	},
+
+	updataData: function(){
+
+		console.log('update!!');
 
 	}
 
@@ -216,7 +231,9 @@ chartphael.bmf.defaults = {
 	},
 	circleTextStyle: {
 		'fill': '#fff',
-		'font-size':'15px'
+		'font-size':'14px',
+		'stroke-width': .5,
+		'stroke': '#fff'
 	},
 	circleTextBkg: {
 		'fill': '#8fb727'

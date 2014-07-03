@@ -430,7 +430,7 @@ Raphael.fn.pieChart = function (cx, cy, r, values, colors) {
     	chart[i] = paper.path().attr({
     		"fill": colors[i],
 			"stroke": "#fefefe",
-			"stroke-width": .3,
+			"stroke-width": .75,
 			arc: [cx, cy, 0, total, r, true]
     	});
 
