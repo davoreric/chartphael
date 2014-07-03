@@ -90,6 +90,11 @@ chartphael.helper.extend(chartphael.bmf.prototype, {
 			values = [],
 			colors = [];
 
+		this.paper.circle(pointPosX, pointPosY, 50).attr({
+			'fill': '#f3f3f0',
+			'stroke-width': 0
+		});
+
 		if(centralData){
 
 			for(i=0;i<centralData.length;i++){
@@ -109,9 +114,10 @@ chartphael.helper.extend(chartphael.bmf.prototype, {
 		//text
 		this.paper.text(pointPosX, pointPosY, this.data.items[0].y).attr({
 			'fill': '#8eb727',
-			'font-size':'15px',
+			'font-size':'19px',
 			'stroke': '#8eb727',
-			'stroke-width': .5
+			'stroke-width': 0,
+			'font-family': this.options.globalFont
 		});
 
 		//inner status circle
@@ -157,8 +163,9 @@ chartphael.helper.extend(chartphael.bmf.prototype, {
 				'fill': infoAxis[i].color,
 				'font-size':'12px',
 				'text-anchor': 'start',
-				'stroke-width': .5,
-				'stroke': infoAxis[i].color
+				'stroke-width': 0,
+				'stroke': infoAxis[i].color,
+				'font-family': this.options.globalFont
 			});
 
 			var rectWidth = lineText.getBBox().width + 4,
@@ -202,8 +209,8 @@ chartphael.bmf.defaults = {
 		show: false,
 		text: false,
 		step: 150,
-		outerLines: false,
-		direction: 'right'
+		outerLines: true,
+		direction: 'bottom'
 	},	
 
 	yAxis: {
@@ -211,7 +218,7 @@ chartphael.bmf.defaults = {
 		text: false,
 		step: 150,
 		outerLines: true,
-		direction: 'bottom'
+		direction: 'right'
 	},
 
 	grid: {
@@ -246,15 +253,18 @@ chartphael.bmf.defaults = {
 		},
 		text: {
 			show: true,
-			bkg: '#8fb727',
+			bkg: '#99c031',
 			style: {
 				'fill': '#fff',
-				'font-size':'14px',
-				'stroke-width': .5,
-				'stroke': '#fff'
+				'font-size':'16px',
+				'stroke-width': 0,
+				'stroke': '#fff',
+				'font-family': '"Open Sans Condensed",Arial,sans-serif'
 			}
 		}
 	},
+
+	globalFont: '"Open Sans Condensed",Arial,sans-serif',
 
 	padding: {
 		'top': 125,

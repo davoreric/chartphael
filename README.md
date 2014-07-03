@@ -76,8 +76,7 @@ JSON formats:
                     "innerStep": 100,
                     "outerStep": [
                         { "percent": 25, "color": "#e6d62c" },
-                        { "percent": 25, "color": "#df4c44" },
-                        { "percent": 50, "color": "#f3f3f0" }
+                        { "percent": 125, "color": "#df4c44" }
                     ]
                 }
             }

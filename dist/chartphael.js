@@ -444,7 +444,7 @@ Raphael.fn.pieChart = function (cx, cy, r, values, colors) {
     var paper = this,
     	chart = [],
     	newValues = [],
-    	total = 0,
+    	total = 100,
     	attrValue = {};
 
     for (var i = 0; i < values.length; i++) {
@@ -452,8 +452,8 @@ Raphael.fn.pieChart = function (cx, cy, r, values, colors) {
         	newValues[i] = values[i];
         } else {
         	newValues[i] = values[i] + newValues[i-1];
+        	if(newValues[i]>total) newValues[i] = total;
         }
-        total += values[i];
     }    
 
     newValues.reverse();

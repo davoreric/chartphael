@@ -11,5 +11,5 @@ html, body { min-height: 100%; font-family: sans-serif; }
 h2 { font-size: 16px; font-weight: 400; padding: 10px; text-transform: uppercase; color: #979980; background: #f1f2ef; border-radius: 5px; margin: 0; letter-spacing: .5px; }
 
 .chart_wrap { margin: 20px 0; width: 470px; height: 300px; background: #fafafa; position: relative; }
-.chart_wrap.large { width: 1000px; height: 440px; background: #8fb727; }
+.chart_wrap.large { width: 1000px; height: 440px; background: #99c031; }
 .chart_el { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
