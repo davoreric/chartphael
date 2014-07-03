@@ -262,6 +262,26 @@ https://github.com/davoreric/chartphael
 			
 			return linePath;
 
+		},
+
+		'bar': function(){
+
+			var items = this.data.items,
+				barPath = '';
+
+			for(i=0;i<items.length;i++){
+
+				var pointPosX = this.bound.bl.x + items[i].x * this.gridIncrementY,
+					pointPosY = this.bound.bl.y - items[i].y * this.gridIncrementX;
+				
+				barPath += 'M'+ pointPosX +' '+ pointPosY + 'L'+ pointPosX +' '+ this.bound.bl.y;
+				
+			}
+
+			this.paper.path(barPath).attr(this.options.barStyle).toBack();
+			
+			return barPath;
+
 		}
 
 	};

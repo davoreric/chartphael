@@ -38,12 +38,20 @@
                 </div>
             </section>
 
+            <section>
+                <h2>Bar chart</h2>
+                <div class="chart_wrap">
+                    <div class="chart_el" id="bar_chart"></div>
+                </div>
+            </section>
+
         </section>
         
         <script src="../dist/chartphael.js"></script>
         <script src="../dist/graph/arc.js"></script>
         <script src="../dist/graph/mbf.js"></script>
         <script src="../dist/graph/line.js"></script>
+        <script src="../dist/graph/bar.js"></script>
         <script src="../dist/graph/pie.js"></script>
         
         <script>
@@ -119,6 +127,34 @@
                 ]
             };
 
+            var barChartJSON = {
+                "grid": {
+                    "x": {
+                        "interval": 2,
+                        "min": 0,
+                        "max": 24
+                    },
+                    "y": {
+                        "interval": 25,
+                        "min": 0,
+                        "max": 175
+                    }
+                },
+                "items": [
+                    { "x": 2, "y": 30 },
+                    { "x": 4, "y": 50 },
+                    { "x": 6, "y": 65 },
+                    { "x": 8, "y": 80 },
+                    { "x": 10, "y": 95 },
+                    { "x": 12, "y": 95 },
+                    { "x": 14, "y": 100 },
+                    { "x": 16, "y": 85 },
+                    { "x": 18, "y": 75 },
+                    { "x": 20, "y": 95 },
+                    { "x": 22, "y": 121 }
+                ]
+            };
+
         </script>
 
         <script>
@@ -153,6 +189,12 @@
                 node: document.getElementById('line_chart'),
                 type: 'line',
                 data: lineChartJSON
+            });
+
+            var barGraph = new chartphael({
+                node: document.getElementById('bar_chart'),
+                type: 'bar',
+                data: barChartJSON
             });
             
         </script>

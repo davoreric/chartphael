@@ -82,18 +82,16 @@ chartphael.helper.extend(chartphael.line.prototype, {
 
 //default values
 chartphael.line.defaults = {
-	fixedStepX: false,
-	fixedStepY: false,
 	xAxis: true,
-	yAxis: true,
 	xAxisText: true,
+	fixedStepX: false,
+	yAxis: true,
 	yAxisText: true,
+	fixedStepY: false,
 	dropLineShadow: true,
-	dataXMax: 24,
-    dataYMax: 175,
-    dots: true,
+	dots: true,
 	dotsText: false,
-    padding: {
+	padding: {
 		'top': 40,
         'right': 40,
         'bottom': 40,
