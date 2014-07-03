@@ -89,12 +89,16 @@ chartphael.bar.defaults = {
 		text: true,
 		step: false,
 		outerLines: true,
-		direction: 'left'
+		direction: 'bottom'
 	},
 	
 	//setup Y axis
 	yAxis: {
-		show: false
+		show: false,
+		text: true,
+		step: false,
+		outerLines: true,
+		direction: 'left'
 	},
 
 	//setup grid

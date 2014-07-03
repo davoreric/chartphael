@@ -89,7 +89,7 @@ chartphael.line.defaults = {
 		text: true,
 		step: false,
 		outerLines: false,
-		direction: 'left'
+		direction: 'bottom'
 	},
 	
 	//setup Y axis
@@ -98,7 +98,7 @@ chartphael.line.defaults = {
 		text: true,
 		step: false,
 		outerLines: false,
-		direction: 'bottom'
+		direction: 'left'
 	},
 
 	//setup grid

@@ -14,16 +14,7 @@ Init procedure:
         var bmfChart = new chartphael({
             node: document.getElementById('bmf_chart'),
             type: 'bmf',
-            data: bmfChartJSON,
-            fixedStepY: 150,
-            xAxis: false,
-            directionY: 'right',
-            padding: {
-                'top': 125,
-                'right': 100,
-                'bottom': 100,
-                'left': 0
-            }
+            data: bmfChartJSON
         });
 
         var pieChart = new chartphael({
@@ -36,6 +27,12 @@ Init procedure:
             node: document.getElementById('line_chart'),
             type: 'line',
             data: lineChartJSON
+        });
+
+        var barGraph = new chartphael({
+            node: document.getElementById('bar_chart'),
+            type: 'bar',
+            data: barChartJSON
         });
 
 
@@ -110,5 +107,33 @@ JSON formats:
                 { "x": 20, "y": 85 },
                 { "x": 23, "y": 75 },
                 { "x": 26, "y": 95 }
+            ]
+        };
+
+        var barChartJSON = {
+            "grid": {
+                "x": {
+                    "interval": 2,
+                    "min": 0,
+                    "max": 24
+                },
+                "y": {
+                    "interval": 25,
+                    "min": 0,
+                    "max": 175
+                }
+            },
+            "items": [
+                { "x": 2, "y": 30 },
+                { "x": 4, "y": 50 },
+                { "x": 6, "y": 65 },
+                { "x": 8, "y": 80 },
+                { "x": 10, "y": 95 },
+                { "x": 12, "y": 95 },
+                { "x": 14, "y": 100 },
+                { "x": 16, "y": 85 },
+                { "x": 18, "y": 75 },
+                { "x": 20, "y": 95 },
+                { "x": 22, "y": 121 }
             ]
         };
