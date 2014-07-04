@@ -19,6 +19,11 @@ chartphael.bmf = function(options) {
 	//set internal data
 	this.node = this.options.node;
 	this.data = this.options.data;
+	this.dotsArray = [];
+	this.dotsTextArray = [];
+	this.dotTextBkg = [];
+	this.customCircleArray = [];
+	this.pathEl = true;
 
 	this.paperSize = {
 		'x': this.node.offsetWidth,
@@ -80,7 +85,7 @@ chartphael.helper.extend(chartphael.bmf.prototype, {
 			pointPosY = this.bound.br.y - ((this.data.items[0].y - rangeData.min)*(this.bound.size.y/dataHeight));
 
 		//background
-		this.paper.circle(pointPosX, pointPosY, 70).attr({
+		this.customCircleArray[0] = this.paper.circle(pointPosX, pointPosY, 70).attr({
 			'fill': '#fff',
 			'stroke-width': 0
 		});
@@ -90,7 +95,7 @@ chartphael.helper.extend(chartphael.bmf.prototype, {
 			values = [],
 			colors = [];
 
-		this.paper.circle(pointPosX, pointPosY, 50).attr({
+		this.customCircleArray[1] = this.paper.circle(pointPosX, pointPosY, 50).attr({
 			'fill': '#f3f3f0',
 			'stroke-width': 0
 		});
@@ -102,9 +107,9 @@ chartphael.helper.extend(chartphael.bmf.prototype, {
 		    	colors.push(centralData[i].color);
 			}
 
-			this.paper.pieChart(pointPosX, pointPosY, 50, values, colors);
+			this.customCircleArray[2] = this.paper.pieChart(pointPosX, pointPosY, 50, values, colors);
 
-			this.paper.circle(pointPosX, pointPosY, 39).attr({
+			this.customCircleArray[3] = this.paper.circle(pointPosX, pointPosY, 39).attr({
 				'fill': '#fff',
 				'stroke-width': 0
 			});
@@ -112,7 +117,7 @@ chartphael.helper.extend(chartphael.bmf.prototype, {
 		}
 
 		//text
-		this.paper.text(pointPosX, pointPosY, this.data.items[0].y).attr({
+		this.customCircleArray[4] = this.paper.text(pointPosX, pointPosY, this.data.items[0].y).attr({
 			'fill': '#8eb727',
 			'font-size':'19px',
 			'stroke': '#8eb727',
@@ -121,25 +126,25 @@ chartphael.helper.extend(chartphael.bmf.prototype, {
 		});
 
 		//inner status circle
-		var innerCircle = this.paper.path().attr({
+		this.customCircleArray[5] = this.paper.path().attr({
 		    'stroke': '#8eb727',
 		    'stroke-width': 8,
 		    arc: [pointPosX, pointPosY, 0, 100, 28, false]
 		});
 
-		innerCircle.animate({
+		this.customCircleArray[5].animate({
 			arc: [pointPosX, pointPosY, this.data.customCircle.progress.innerStep, 100, 28, false]
 		}, 500, "easysin");
 
 		//outer status circle
-		var outerCircle = this.paper.circle(pointPosX, pointPosY, 60).attr({
+		this.customCircleArray[6] = this.paper.circle(pointPosX, pointPosY, 60).attr({
 			'fill': 'transparent',
 			'stroke': this.data.customCircle.statusColor,
 			'stroke-width': '7',
 			'stroke-dasharray': '.'
 		});
 
-		outerCircle.node.setAttribute('stroke-dasharray','7,1.95');
+		this.customCircleArray[6].node.setAttribute('stroke-dasharray','7,1.95');
 		
 
 	},
@@ -150,16 +155,20 @@ chartphael.helper.extend(chartphael.bmf.prototype, {
 			rangeData = chartphael.helper.getDataRange.call(this,this.data,'y'),
 			dataHeight = rangeData.range;
 
+		this.infoAxis = [];
+		this.infoAxisText = [];
+		this.infoAxisBkg = [];
+
 		for (i=0;i<infoAxis.length;i++) {
 
-			var tempY = this.bound.br.y - ((infoAxis[i].coord.y - rangeData.min)*(this.bound.size.y/dataHeight))
+			var tempY = this.bound.br.y - ((infoAxis[i].coord.y - rangeData.min)*(this.bound.size.y/dataHeight));
 
-			var line = this.paper.path('M'+this.bound.bl.x+' '+tempY+'L'+this.paperSize.x+' '+tempY).attr({
+			this.infoAxis[i] = this.paper.path('M'+this.bound.bl.x+' '+tempY+'L'+this.paperSize.x+' '+tempY).attr({
 				'stroke': infoAxis[i].color,
 				'stroke-width': 1
 			}).toBack();
 
-			var lineText = this.paper.text(this.bound.bl.x + 20, tempY, infoAxis[i].coord.y).attr({
+			this.infoAxisText[i] = this.paper.text(this.bound.bl.x + 20, tempY, infoAxis[i].coord.y).attr({
 				'fill': infoAxis[i].color,
 				'font-size':'12px',
 				'text-anchor': 'start',
@@ -168,18 +177,18 @@ chartphael.helper.extend(chartphael.bmf.prototype, {
 				'font-family': this.options.dots.text.style['font-family']
 			});
 
-			var rectWidth = lineText.getBBox().width + 4,
-				rectHeight = lineText.getBBox().height + 2,
+			var rectWidth = this.infoAxisText[i].getBBox().width + 4,
+				rectHeight = this.infoAxisText[i].getBBox().height + 2,
 				rectPointPosX = (this.bound.bl.x + 20) - 2,
 				rectPointPosY = tempY-rectHeight/2;
 
-			var lineTextBkg = this.paper.rect(rectPointPosX, rectPointPosY, rectWidth, rectHeight).attr({
+			this.infoAxisBkg[i] = this.paper.rect(rectPointPosX, rectPointPosY, rectWidth, rectHeight).attr({
 				'fill': this.options.dots.text.bkg,
 				'stroke-width': 0
 			});
 			
-			lineTextBkg.toBack();
-			line.toBack();
+			this.infoAxisBkg[i].toBack();
+			this.infoAxis[i].toBack();
 
 		}
 
@@ -187,16 +196,121 @@ chartphael.helper.extend(chartphael.bmf.prototype, {
 
 	},
 
-	updateJSON: function(json){
+	updateData: function(json){
 
-		//replace current JSON
-		this.data = json;
+		/* this is just a test update method, needs refactoring */
 
-		//clear paper
-		this.paper.clear();
+		var items = json.items,
+			data = chartphael.helper.getDataRange.call(this,json,'y'),
+			dataHeight = data.range,
+			linePath = '';
 
-		//draw chart
-		this.init();
+		for(i=0;i<items.length;i++){
+
+			var currInc = this.options.yAxis.step*i,
+				pointPosX = this.bound.br.x-currInc,
+				pointPosY = this.bound.br.y - ((items[i].y - data.min)*(this.bound.size.y/dataHeight));
+				
+			//animate dots
+			this.dotsArray[i].animate({cy:pointPosY}, 500, "easysin");
+
+			//animate dots text
+			this.dotsTextArray[i].animate({y:pointPosY+this.options.dots.radius*3}, 500, "easysin");
+			this.dotsTextArray[i].attr({text:items[i].y})
+
+			//animate dots text background
+			var rectWidth = this.dotsTextArray[i].getBBox().width,
+				rectHeight = this.dotsTextArray[i].getBBox().height,
+				rectPointPosX = pointPosX-rectWidth/2,
+				rectPointPosY = (pointPosY+this.options.dots.radius*3)-rectHeight/2+2;
+
+			this.dotTextBkg[i].animate({x:rectPointPosX,y:rectPointPosY,width:rectWidth,height:rectHeight}, 500, "easysin");
+
+			//animate custom circle
+			if(i==0){
+
+				//background
+				this.customCircleArray[0].animate({cy:pointPosY}, 500, "easysin");
+
+				//central status
+				var values = json.customCircle.progress.outerStep,
+					newValues = [],
+					total = 100;
+
+				for (var m = 0; m < values.length; m++) {
+					if(m==0){
+						newValues[m] = values[m].percent;
+					} else {
+						newValues[m] = values[m].percent + newValues[m-1];
+						if(newValues[m]>total) newValues[m] = total;
+					}
+				}
+
+				newValues.reverse();
+
+				this.customCircleArray[1].animate({cy:pointPosY}, 500, "easysin");
+
+				for(n=0;n<this.customCircleArray[2].length;n++){
+
+					this.customCircleArray[2][n].animate({
+						arc: [pointPosX, pointPosY, newValues[n], total, 50, true]
+					}, 500, "easysin");
+
+				}
+
+				this.customCircleArray[3].animate({cy:pointPosY}, 500, "easysin");
+
+				//text
+				this.customCircleArray[4].animate({y:pointPosY}, 500, "easysin");
+				this.customCircleArray[4].attr({text:items[i].y})
+
+				//inner status
+				this.customCircleArray[5].animate({
+					arc: [pointPosX, pointPosY, json.customCircle.progress.innerStep, 100, 28, false]
+				}, 500, "easysin");
+
+				//outer status
+				this.customCircleArray[6].animate({cy:pointPosY, stroke: json.customCircle.statusColor}, 500, "easysin");
+
+			}
+
+			//calculate path
+			if (i==0) {
+
+				linePath += 'M'+ pointPosX +' '+ pointPosY;
+
+			} else {
+
+				linePath += 'L'+ pointPosX +' '+ pointPosY;
+
+			}
+
+		}
+
+		//animate path
+		this.pathEl.animate({path: linePath}, 500, "easysin");
+
+		//animate info Axis
+		var infoAxis = json.infoAxis;
+
+		for (i=0;i<infoAxis.length;i++) {
+
+			var tempY = this.bound.br.y - ((infoAxis[i].coord.y - data.min)*(this.bound.size.y/dataHeight))
+
+			this.infoAxis[i].animate({path: 'M'+this.bound.bl.x+' '+tempY+'L'+this.paperSize.x+' '+tempY}, 500, "easysin");
+			this.infoAxisText[i].animate({y:tempY}, 500, "easysin");
+			this.infoAxisText[i].attr({text:infoAxis[i].coord.y})
+
+			var infoRectWidth = this.infoAxisText[i].getBBox().width + 4,
+				infoRectHeight = this.infoAxisText[i].getBBox().height + 2,
+				infoRectPointPosX = (this.bound.bl.x + 20) - 2,
+				infoRectPointPosY = tempY-rectHeight/2;
+
+			this.infoAxisBkg[i].animate({x:infoRectPointPosX,y:infoRectPointPosY,width:infoRectWidth,height:infoRectHeight}, 500, "easysin");
+
+		}
+
+		return this;
 
 	}
 

@@ -188,8 +188,27 @@ https://github.com/davoreric/chartphael
 		'line': function(){
 
 			var items = this.data.items,
-				dotTextBkg = [],
-				linePath = '';
+				linePath = '',
+				pathEl,
+				dotsArray = [],
+				dotsTextArray = [],
+				dotTextBkg = [];
+
+			if(this.dotsArray){
+				dotsArray = this.dotsArray;
+			}
+
+			if(this.dotsTextArray){
+				dotsTextArray = this.dotsTextArray;
+			}
+
+			if(this.dotTextBkg){
+				dotTextBkg = this.dotTextBkg;
+			}
+
+			if(this.pathEl){
+				pathEl = this.pathEl;
+			}
 
 			if (this.options.yAxis.step) {
 
@@ -229,25 +248,21 @@ https://github.com/davoreric/chartphael
 					//this checks if X grid has outer lines set to false and then does not draws first and last dots
 					if ( !((i==0 || i==items.length-1) && !this.options.xAxis.outerLines) ) {
 
-						this.paper.circle(pointPosX, pointPosY, this.options.dots.radius).attr(this.options.dots.style);	
+						dotsArray[i] = this.paper.circle(pointPosX, pointPosY, this.options.dots.radius).attr(this.options.dots.style);	
 
 						if (this.options.dots.text.show) {
 							
-							var dotText = this.paper.text(pointPosX, pointPosY+this.options.dots.radius*3, items[i].y).attr(this.options.dots.text.style);
+							dotsTextArray[i] = this.paper.text(pointPosX, pointPosY+this.options.dots.radius*3, items[i].y).attr(this.options.dots.text.style);
 
-							if(this.options.circleTextBkg) {
+							var rectWidth = dotsTextArray[i].getBBox().width,
+								rectHeight = dotsTextArray[i].getBBox().height,
+								rectPointPosX = pointPosX-rectWidth/2,
+								rectPointPosY = (pointPosY+this.options.dots.radius*3)-rectHeight/2+2;
 
-								var rectWidth = dotText.getBBox().width + 2,
-									rectHeight = dotText.getBBox().height + 2,
-									rectPointPosX = pointPosX-rectWidth/2,
-									rectPointPosY = (pointPosY+this.options.dots.radius*3)-rectHeight/2;
-
-								dotTextBkg[i] = this.paper.rect(rectPointPosX, rectPointPosY, rectWidth, rectHeight).attr({
-									'fill': this.options.circleTextBkg.fill,
-									'stroke-width': 0
-								}).toBack();
-
-							}
+							dotTextBkg[i] = this.paper.rect(rectPointPosX, rectPointPosY, rectWidth, rectHeight).attr({
+								'fill': this.options.dots.text.bkg,
+								'stroke-width': 0
+							}).toBack();
 
 						}
 
@@ -269,7 +284,7 @@ https://github.com/davoreric/chartphael
 
 			}
 
-			this.paper.path(linePath).attr(this.options.line.style).toBack();
+			this.pathEl = this.paper.path(linePath).attr(this.options.line.style).toBack();
 
 			for(n=0;n<dotTextBkg.length;n++){
 				dotTextBkg[n].toBack();	
@@ -434,6 +449,7 @@ Raphael.fn.customArc = function () {
 	    return {
 	        path: path
 	    };
+
 	};
 
 };
@@ -466,6 +482,11 @@ Raphael.fn.pieChart = function (cx, cy, r, values, colors) {
 			"stroke": "#fefefe",
 			"stroke-width": .75,
 			arc: [cx, cy, 0, total, r, true]
+    	});
+
+    	chart[i].data({
+    		total: total,
+    		radius: r
     	});
 
         chart[i].animate({
