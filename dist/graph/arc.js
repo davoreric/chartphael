@@ -18,6 +18,7 @@ chartphael.arc = function(options) {
 
 	//set internal data
 	this.node = this.options.node;
+	this.data = this.options.data;
 
 	this.paperSize = {
 		'x': this.node.offsetWidth,
@@ -42,35 +43,37 @@ chartphael.helper.extend(chartphael.arc.prototype, {
 
 	init: function(){
 
+		if(this.data.value>100) this.data.value = 100;
+
 		//call method for creating arc graph
-		this.setChart(this.node.getAttribute('data-value'));
+		this.setChart(this.data.value);
 
 	},
 
 	setChart: function(end){
 
-		var chart = this.paper.path().attr({
+		this.chart = this.paper.path().attr({
 		    'stroke': this.options.colorChart,
 		    'stroke-width': this.options.stroke,
 		    arc: [this.center, this.center, 0, 100, this.radius,false]
 		});
 
-		chart.animate({
+		this.chart.animate({
 		    arc: [this.center, this.center, end, 100, this.radius,false]
 		}, 500, "easysin");
 
 	},
 
-	updateJSON: function(json){
+	updateData: function(json){
 
 		//replace current JSON
 		this.data = json;
 
-		//clear paper
-		this.paper.clear();
+		if(this.data.value>100) this.data.value = 100;
 
-		//draw chart
-		this.init();
+		this.chart.animate({
+		    arc: [this.center, this.center, this.data.value, 100, this.radius,false]
+		}, 500, "easysin");
 
 	}
 

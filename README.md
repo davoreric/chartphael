@@ -8,7 +8,8 @@ Init procedure:
 
         var profileArc = new chartphael({
             node: document.getElementById('profile_bar'),
-            type: 'arc'
+            type: 'arc',
+            data: { value: 45 }
         });
 
         var bmfChart = new chartphael({
