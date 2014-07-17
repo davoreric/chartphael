@@ -45,8 +45,23 @@ chartphael.helper.extend(chartphael.arc.prototype, {
 
 		if(this.data.value>100) this.data.value = 100;
 
+		//test option and call method for creating track background
+		if(this.options.track){
+			this.setTrack();	
+		}
+
 		//call method for creating arc graph
 		this.setChart(this.data.value);
+
+	},
+
+	setTrack: function(end){
+
+		this.chart = this.paper.path().attr({
+		    'stroke': this.options.colorTrack,
+		    'stroke-width': this.options.stroke,
+		    arc: [this.center, this.center, 100, 100, this.radius,false]
+		});
 
 	},
 
@@ -82,5 +97,7 @@ chartphael.helper.extend(chartphael.arc.prototype, {
 //default values
 chartphael.arc.defaults = {
 	stroke: 5,
-	colorChart: '#8fbb48'
+	colorChart: '#8fbb48',
+	track: false,
+	colorTrack: '#ccc',
 };
