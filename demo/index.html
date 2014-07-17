@@ -33,6 +33,13 @@
             </section>
 
             <section>
+                <h2>Doughnut chart</h2>
+                <div class="chart_wrap">
+                    <div class="chart_el" id="doughnut_chart"></div>
+                </div>
+            </section>
+
+            <section>
                 <h2>Line chart</h2>
                 <div class="chart_wrap">
                     <div class="chart_el" id="line_chart"></div>
@@ -175,6 +182,13 @@
             var pieChart = new chartphael({
                 node: document.getElementById('pie_chart'),
                 type: 'pie',
+                data: pieChartJSON
+            });
+
+            var doughnutChart = new chartphael({
+                node: document.getElementById('doughnut_chart'),
+                type: 'pie',
+                doughnut: true,
                 data: pieChartJSON
             });
 

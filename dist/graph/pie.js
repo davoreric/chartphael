@@ -47,6 +47,11 @@ chartphael.helper.extend(chartphael.pie.prototype, {
 		//call method for creating pie graph
 		this.setPie();
 
+		//adding doughnut cutout
+		if(this.options.doughnut){
+			this.doughnut();
+		}
+
 	},
 
 	setPie: function(){
@@ -60,6 +65,15 @@ chartphael.helper.extend(chartphael.pie.prototype, {
 		}
 		
 		this.paper.pieChart(this.centerX, this.centerY, this.radius, values, colors, true);
+
+	},
+
+	doughnut: function(){
+
+		this.paper.circle(this.centerX, this.centerY, this.radius-(this.options.doughnutStroke*2)).attr({
+			'fill': this.options.doughnutBkg,
+			'stroke-width': 0
+		});
 
 	},
 
@@ -79,4 +93,8 @@ chartphael.helper.extend(chartphael.pie.prototype, {
 });
 
 //default values
-chartphael.pie.defaults = {};
+chartphael.pie.defaults = {
+	doughnut: false,
+	doughnutStroke: 10,
+	doughnutBkg: '#fff'
+};
