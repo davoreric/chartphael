@@ -350,6 +350,13 @@ chartphael.helper = {
 
 	},
 
+	'setResponsive': function(data){
+
+		data.node.setViewBox(0, 0, data.width, data.height );
+		data.node.setSize('100%', '100%');
+
+	},
+
 	'getDataRange': function(data){
 
 		var dataRange = new Array(),

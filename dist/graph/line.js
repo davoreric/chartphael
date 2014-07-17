@@ -31,6 +31,15 @@ chartphael.line = function(options) {
 	//set SVG paper workarea
 	this.paper = Raphael(this.node,this.paperSize.x,this.paperSize.y);
 
+	//set responsive chart
+	if(this.options.responsive){
+		chartphael.helper.setResponsive({
+			node: this.paper,
+			width: this.paperSize.x,
+			height: this.paperSize.y
+		});
+	}
+
 	//start
 	this.init();
 
@@ -82,6 +91,8 @@ chartphael.helper.extend(chartphael.line.prototype, {
 
 //default values
 chartphael.line.defaults = {
+
+	responsive: false,
 
 	//setup X axis
 	xAxis: {

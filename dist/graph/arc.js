@@ -31,6 +31,15 @@ chartphael.arc = function(options) {
 	//set SVG paper workarea
 	this.paper = Raphael(this.node,this.paperSize.x,this.paperSize.y);
 
+	//set responsive chart
+	if(this.options.responsive){
+		chartphael.helper.setResponsive({
+			node: this.paper,
+			width: this.paperSize.x,
+			height: this.paperSize.y
+		});
+	}
+
 	//adding custom arc attribute
 	this.paper.customArc();
 
@@ -96,6 +105,7 @@ chartphael.helper.extend(chartphael.arc.prototype, {
 
 //default values
 chartphael.arc.defaults = {
+	responsive: false,
 	stroke: 5,
 	colorChart: '#8fbb48',
 	track: false,

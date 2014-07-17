@@ -25,6 +25,13 @@ Init procedure:
             data: pieChartJSON
         });
 
+        var doughnutChart = new chartphael({
+            node: document.getElementById('doughnut_chart'),
+            type: 'pie',
+            doughnut: true,
+            data: pieChartJSON
+        });
+
         var lineGraph = new chartphael({
             node: document.getElementById('line_chart'),
             type: 'line',

@@ -27,11 +27,20 @@ chartphael.pie = function(options) {
 
 	this.centerX = this.paperSize.x/2;
 	this.centerY = this.paperSize.y/2;
-	this.radius = this.centerY-40;
+	this.radius = this.centerY-this.options.padding;
 
 	//set SVG paper workarea
 	this.paper = Raphael(this.node,this.paperSize.x,this.paperSize.y);
 
+	//set responsive chart
+	if(this.options.responsive){
+		chartphael.helper.setResponsive({
+			node: this.paper,
+			width: this.paperSize.x,
+			height: this.paperSize.y
+		});
+	}
+	 
 	//adding custom arc attribute
 	this.paper.customArc();
 
@@ -94,6 +103,8 @@ chartphael.helper.extend(chartphael.pie.prototype, {
 
 //default values
 chartphael.pie.defaults = {
+	responsive: false,
+	padding: 40,
 	doughnut: false,
 	doughnutStroke: 10,
 	doughnutBkg: '#fff'
