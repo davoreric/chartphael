@@ -69,11 +69,11 @@ https://github.com/davoreric/chartphael
 				yAxisPath = '',
 				yAxisLabel;
 
-			//if axis has text, set first value
+			//if axis has text, set first numeric value
 			if (this.options.xAxis.text) {
 
 				yAxisLabel = this.data.grid.x.min;
-				
+					
 			}
 
 			//setting direction (left is default)
@@ -114,7 +114,18 @@ https://github.com/davoreric/chartphael
 
 				if (this.options.xAxis.text) {
 
-					this.paper.text(yPos.bottomX+currInc, yPos.bottomY+15, yAxisLabel).attr(this.options.grid.text.style);
+					if( !((i==0 || i==this.yAxisAmount-1) && this.options.type == 'bar') ){
+
+						if(typeof this.data.grid.x.labels != 'undefined'){
+							n = i;
+							if(this.options.type == 'bar') n--;
+							yAxisLabel = this.data.grid.x.labels[n];
+						}
+
+						this.paper.text(yPos.bottomX+currInc, yPos.bottomY+15, yAxisLabel).attr(this.options.grid.text.style);
+
+					}
+
 					yAxisLabel += this.data.grid.x.min + this.data.grid.x.interval;
 					
 				}
@@ -295,18 +306,40 @@ https://github.com/davoreric/chartphael
 		'bar': function(){
 
 			var items = this.data.items,
-				barPath = '';
+				barPath = [];
 
 			for(i=0;i<items.length;i++){
 
 				var pointPosX = this.bound.bl.x + items[i].x * this.gridIncrementY,
-					pointPosY = this.bound.bl.y - items[i].y * this.gridIncrementX;
+					pointPosY = this.bound.bl.y - items[i].y * this.gridIncrementX,
+					optionStroke = this.options.bar.style['stroke-width'],
+					currStyle = {};
 				
-				barPath += 'M'+ pointPosX +' '+ pointPosY + 'L'+ pointPosX +' '+ this.bound.bl.y;
+				barPath[i] = 'M'+ pointPosX +' '+ pointPosY + 'L'+ pointPosX +' '+ this.bound.bl.y;
+
+				/* fix this nonsense */
+				currStyle['stroke-width'] = optionStroke;
+
+				if(items[i].color != 'undefined') {
+					
+					currStyle.fill = items[i].color;
+					currStyle.stroke = items[i].color;
+
+				} else {
+
+
+					currStyle.fill = this.options.bar.style.fill;
+					currStyle.stroke = this.options.bar.style.stroke;
+
+				}
+
+				console.log(currStyle);
+
+				this.paper.path(barPath[i]).attr(currStyle).toBack();
 				
 			}
 
-			this.paper.path(barPath).attr(this.options.bar.style).toBack();
+			
 			
 			return barPath;
 

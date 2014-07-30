@@ -22,7 +22,7 @@ chartphael.bmf = function(options) {
 	this.dotsArray = [];
 	this.dotsTextArray = [];
 	this.dotTextBkg = [];
-	this.customCircleArray = [];
+	this.trackerArray = [];
 	this.pathEl = true;
 
 	this.paperSize = {
@@ -48,17 +48,21 @@ chartphael.helper.extend(chartphael.bmf.prototype, {
 
 	init: function(){
 
-		//call method for creating grid
-		this.setGrid();
+		if(!this.options.trackerOnly){
 
-		//call method for creating line graph
-		this.setGraph();
+			//call method for creating grid
+			this.setGrid();
+
+			//call method for creating line graph
+			this.setGraph();
+
+			//call method for creating additional Y axis
+			this.setInfoAxis();
+
+		}
 
 		//call method for creating custom dot
-		this.setCustomCircle();
-
-		//call method for creating additional Y axis
-		this.setInfoAxis();
+		this.setTracker();		
 
 	},
 
@@ -77,25 +81,35 @@ chartphael.helper.extend(chartphael.bmf.prototype, {
 
 	},
 
-	setCustomCircle: function(){
+	setTracker: function(){
 
-		var pointPosX = this.bound.br.x,
-			rangeData = chartphael.helper.getDataRange.call(this,this.data,'y'),
-			dataHeight = rangeData.range,
-			pointPosY = this.bound.br.y - ((this.data.items[0].y - rangeData.min)*(this.bound.size.y/dataHeight));
+		var rangeData = chartphael.helper.getDataRange.call(this,this.data,'y'),
+			dataHeight = rangeData.range;
+
+		if(this.options.trackerOnly){
+
+			var pointPosX = this.paperSize.x/2,
+				pointPosY = this.paperSize.y/2;
+
+		} else {
+
+			var pointPosX = this.bound.br.x,
+				pointPosY = this.bound.br.y - ((this.data.items[0].y - rangeData.min)*(this.bound.size.y/dataHeight));
+
+		}
 
 		//background
-		this.customCircleArray[0] = this.paper.circle(pointPosX, pointPosY, 70).attr({
+		this.trackerArray[0] = this.paper.circle(pointPosX, pointPosY, 70).attr({
 			'fill': '#fff',
 			'stroke-width': 0
 		});
 
 		//central status circle
-		var centralData = this.data.customCircle.progress.outerStep,
+		var centralData = this.data.tracker.progress.outerStep,
 			values = [],
 			colors = [];
 
-		this.customCircleArray[1] = this.paper.circle(pointPosX, pointPosY, 50).attr({
+		this.trackerArray[1] = this.paper.circle(pointPosX, pointPosY, 50).attr({
 			'fill': '#f3f3f0',
 			'stroke-width': 0
 		});
@@ -107,9 +121,9 @@ chartphael.helper.extend(chartphael.bmf.prototype, {
 		    	colors.push(centralData[i].color);
 			}
 
-			this.customCircleArray[2] = this.paper.pieChart(pointPosX, pointPosY, 50, values, colors);
+			this.trackerArray[2] = this.paper.pieChart(pointPosX, pointPosY, 50, values, colors);
 
-			this.customCircleArray[3] = this.paper.circle(pointPosX, pointPosY, 39).attr({
+			this.trackerArray[3] = this.paper.circle(pointPosX, pointPosY, 39).attr({
 				'fill': '#fff',
 				'stroke-width': 0
 			});
@@ -117,7 +131,7 @@ chartphael.helper.extend(chartphael.bmf.prototype, {
 		}
 
 		//text
-		this.customCircleArray[4] = this.paper.text(pointPosX, pointPosY, this.data.items[0].y).attr({
+		this.trackerArray[4] = this.paper.text(pointPosX, pointPosY, this.data.items[0].y).attr({
 			'fill': '#8eb727',
 			'font-size':'19px',
 			'stroke': '#8eb727',
@@ -126,25 +140,25 @@ chartphael.helper.extend(chartphael.bmf.prototype, {
 		});
 
 		//inner status circle
-		this.customCircleArray[5] = this.paper.path().attr({
+		this.trackerArray[5] = this.paper.path().attr({
 		    'stroke': '#8eb727',
 		    'stroke-width': 8,
 		    arc: [pointPosX, pointPosY, 0, 100, 28, false]
 		});
 
-		this.customCircleArray[5].animate({
-			arc: [pointPosX, pointPosY, this.data.customCircle.progress.innerStep, 100, 28, false]
+		this.trackerArray[5].animate({
+			arc: [pointPosX, pointPosY, this.data.tracker.progress.innerStep, 100, 28, false]
 		}, 500, "easysin");
 
 		//outer status circle
-		this.customCircleArray[6] = this.paper.circle(pointPosX, pointPosY, 60).attr({
+		this.trackerArray[6] = this.paper.circle(pointPosX, pointPosY, 60).attr({
 			'fill': 'transparent',
-			'stroke': this.data.customCircle.statusColor,
+			'stroke': this.data.tracker.statusColor,
 			'stroke-width': '7',
 			'stroke-dasharray': '.'
 		});
 
-		this.customCircleArray[6].node.setAttribute('stroke-dasharray','7,1.95');
+		this.trackerArray[6].node.setAttribute('stroke-dasharray','7,1.95');
 		
 
 	},
@@ -168,7 +182,7 @@ chartphael.helper.extend(chartphael.bmf.prototype, {
 				'stroke-width': 1
 			}).toBack();
 
-			this.infoAxisText[i] = this.paper.text(this.bound.bl.x + 20, tempY, infoAxis[i].coord.y).attr({
+			this.infoAxisText[i] = this.paper.text(this.bound.bl.x + 20, tempY, infoAxis[i].label).attr({
 				'fill': infoAxis[i].color,
 				'font-size':'12px',
 				'text-anchor': 'start',
@@ -200,117 +214,141 @@ chartphael.helper.extend(chartphael.bmf.prototype, {
 
 		/* this is just a test update method, needs refactoring */
 
-		var items = json.items,
-			data = chartphael.helper.getDataRange.call(this,json,'y'),
-			dataHeight = data.range,
-			linePath = '';
+		if(this.options.trackerOnly){
 
-		for(i=0;i<items.length;i++){
+			this.updateDataTracker(json,pointPosY,pointPosX);
 
-			var currInc = this.options.yAxis.step*i,
-				pointPosX = this.bound.br.x-currInc,
-				pointPosY = this.bound.br.y - ((items[i].y - data.min)*(this.bound.size.y/dataHeight));
-				
-			//animate dots
-			this.dotsArray[i].animate({cy:pointPosY}, 500, "easysin");
+		} else {
 
-			//animate dots text
-			this.dotsTextArray[i].animate({y:pointPosY+this.options.dots.radius*3}, 500, "easysin");
-			this.dotsTextArray[i].attr({text:items[i].y})
+			var items = json.items,
+				data = chartphael.helper.getDataRange.call(this,json,'y'),
+				dataHeight = data.range,
+				linePath = '';
 
-			//animate dots text background
-			var rectWidth = this.dotsTextArray[i].getBBox().width,
-				rectHeight = this.dotsTextArray[i].getBBox().height,
-				rectPointPosX = pointPosX-rectWidth/2,
-				rectPointPosY = (pointPosY+this.options.dots.radius*3)-rectHeight/2+2;
+			for(i=0;i<items.length;i++){
 
-			this.dotTextBkg[i].animate({x:rectPointPosX,y:rectPointPosY,width:rectWidth,height:rectHeight}, 500, "easysin");
+				var currInc = this.options.yAxis.step*i,
+					pointPosX = this.bound.br.x-currInc,
+					pointPosY = this.bound.br.y - ((items[i].y - data.min)*(this.bound.size.y/dataHeight));
+					
+				//animate dots
+				this.dotsArray[i].animate({cy:pointPosY}, 500, "easysin");
 
-			//animate custom circle
-			if(i==0){
+				//animate dots text
+				this.dotsTextArray[i].animate({y:pointPosY+this.options.dots.radius*3}, 500, "easysin");
+				this.dotsTextArray[i].attr({text:items[i].y})
 
-				//background
-				this.customCircleArray[0].animate({cy:pointPosY}, 500, "easysin");
+				//animate dots text background
+				var rectWidth = this.dotsTextArray[i].getBBox().width,
+					rectHeight = this.dotsTextArray[i].getBBox().height,
+					rectPointPosX = pointPosX-rectWidth/2,
+					rectPointPosY = (pointPosY+this.options.dots.radius*3)-rectHeight/2+2;
 
-				//central status
-				var values = json.customCircle.progress.outerStep,
-					newValues = [],
-					total = 100;
+				this.dotTextBkg[i].animate({x:rectPointPosX,y:rectPointPosY,width:rectWidth,height:rectHeight}, 500, "easysin");
 
-				for (var m = 0; m < values.length; m++) {
-					if(m==0){
-						newValues[m] = values[m].percent;
-					} else {
-						newValues[m] = values[m].percent + newValues[m-1];
-						if(newValues[m]>total) newValues[m] = total;
-					}
-				}
+				//animate custom circle
+				if(i==0){
 
-				newValues.reverse();
-
-				this.customCircleArray[1].animate({cy:pointPosY}, 500, "easysin");
-
-				for(n=0;n<this.customCircleArray[2].length;n++){
-
-					this.customCircleArray[2][n].animate({
-						arc: [pointPosX, pointPosY, newValues[n], total, 50, true]
-					}, 500, "easysin");
+					this.updateDataTracker(json,pointPosY,pointPosX);
 
 				}
 
-				this.customCircleArray[3].animate({cy:pointPosY}, 500, "easysin");
+				//calculate path
+				if (i==0) {
 
-				//text
-				this.customCircleArray[4].animate({y:pointPosY}, 500, "easysin");
-				this.customCircleArray[4].attr({text:items[i].y})
+					linePath += 'M'+ pointPosX +' '+ pointPosY;
 
-				//inner status
-				this.customCircleArray[5].animate({
-					arc: [pointPosX, pointPosY, json.customCircle.progress.innerStep, 100, 28, false]
-				}, 500, "easysin");
+				} else {
 
-				//outer status
-				this.customCircleArray[6].animate({cy:pointPosY, stroke: json.customCircle.statusColor}, 500, "easysin");
+					linePath += 'L'+ pointPosX +' '+ pointPosY;
+
+				}
 
 			}
 
-			//calculate path
-			if (i==0) {
+			//animate path
+			this.pathEl.animate({path: linePath}, 500, "easysin");
 
-				linePath += 'M'+ pointPosX +' '+ pointPosY;
+			//animate info Axis
+			var infoAxis = json.infoAxis;
 
-			} else {
+			for (i=0;i<infoAxis.length;i++) {
 
-				linePath += 'L'+ pointPosX +' '+ pointPosY;
+				var tempY = this.bound.br.y - ((infoAxis[i].coord.y - data.min)*(this.bound.size.y/dataHeight))
+
+				this.infoAxis[i].animate({path: 'M'+this.bound.bl.x+' '+tempY+'L'+this.paperSize.x+' '+tempY}, 500, "easysin");
+				this.infoAxisText[i].animate({y:tempY}, 500, "easysin");
+				this.infoAxisText[i].attr({text:infoAxis[i].coord.y})
+
+				var infoRectWidth = this.infoAxisText[i].getBBox().width + 4,
+					infoRectHeight = this.infoAxisText[i].getBBox().height + 2,
+					infoRectPointPosX = (this.bound.bl.x + 20) - 2,
+					infoRectPointPosY = tempY-rectHeight/2;
+
+				this.infoAxisBkg[i].animate({x:infoRectPointPosX,y:infoRectPointPosY,width:infoRectWidth,height:infoRectHeight}, 500, "easysin");
 
 			}
-
-		}
-
-		//animate path
-		this.pathEl.animate({path: linePath}, 500, "easysin");
-
-		//animate info Axis
-		var infoAxis = json.infoAxis;
-
-		for (i=0;i<infoAxis.length;i++) {
-
-			var tempY = this.bound.br.y - ((infoAxis[i].coord.y - data.min)*(this.bound.size.y/dataHeight))
-
-			this.infoAxis[i].animate({path: 'M'+this.bound.bl.x+' '+tempY+'L'+this.paperSize.x+' '+tempY}, 500, "easysin");
-			this.infoAxisText[i].animate({y:tempY}, 500, "easysin");
-			this.infoAxisText[i].attr({text:infoAxis[i].coord.y})
-
-			var infoRectWidth = this.infoAxisText[i].getBBox().width + 4,
-				infoRectHeight = this.infoAxisText[i].getBBox().height + 2,
-				infoRectPointPosX = (this.bound.bl.x + 20) - 2,
-				infoRectPointPosY = tempY-rectHeight/2;
-
-			this.infoAxisBkg[i].animate({x:infoRectPointPosX,y:infoRectPointPosY,width:infoRectWidth,height:infoRectHeight}, 500, "easysin");
 
 		}
 
 		return this;
+
+	},
+
+	updateDataTracker: function(json,pointPosY,pointPosX){
+
+		var items = json.items,
+			currInc = this.options.yAxis.step*0;
+
+		if(this.options.trackerOnly){
+			
+			var pointPosY = this.paperSize.y/2;
+				pointPosX = this.paperSize.x/2;
+
+		}
+
+		//background
+		this.trackerArray[0].animate({cy:pointPosY}, 500, "easysin");
+
+		//central status
+		var values = json.tracker.progress.outerStep,
+			newValues = [],
+			total = 100;
+
+		for (var m = 0; m < values.length; m++) {
+			if(m==0){
+				newValues[m] = values[m].percent;
+			} else {
+				newValues[m] = values[m].percent + newValues[m-1];
+				if(newValues[m]>total) newValues[m] = total;
+			}
+		}
+
+		newValues.reverse();
+
+		this.trackerArray[1].animate({cy:pointPosY}, 500, "easysin");
+
+		for(n=0;n<this.trackerArray[2].length;n++){
+
+			this.trackerArray[2][n].animate({
+				arc: [pointPosX, pointPosY, newValues[n], total, 50, true]
+			}, 500, "easysin");
+
+		}
+
+		this.trackerArray[3].animate({cy:pointPosY}, 500, "easysin");
+
+		//text
+		this.trackerArray[4].animate({y:pointPosY}, 500, "easysin");
+		this.trackerArray[4].attr({text:items[0].y})
+
+		//inner status
+		this.trackerArray[5].animate({
+			arc: [pointPosX, pointPosY, json.tracker.progress.innerStep, 100, 28, false]
+		}, 500, "easysin");
+
+		//outer status
+		this.trackerArray[6].animate({cy:pointPosY, stroke: json.tracker.statusColor}, 500, "easysin");
 
 	}
 
@@ -318,6 +356,8 @@ chartphael.helper.extend(chartphael.bmf.prototype, {
 
 //default values
 chartphael.bmf.defaults = {
+
+	trackerOnly: false,
 
 	xAxis: {
 		show: false,
@@ -349,7 +389,7 @@ chartphael.bmf.defaults = {
 
 	line: {
 		shadow: {
-			show: true
+			show: false
 		},
 		style: {
 			'stroke': '#fff',
