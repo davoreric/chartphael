@@ -428,6 +428,24 @@ chartphael.helper = {
 
 		return obj;
 
+	},
+
+	'fauxDeepExtend': function(obj, source) {
+
+		for (var prop in source){
+
+			if(typeof obj != 'object') break;
+
+			if (prop in obj){
+	        	chartphael.helper.fauxDeepExtend(obj[prop], source[prop]);
+	        } else {
+	        	obj[prop] = source[prop];
+	        }
+
+	    }
+            
+		return obj;
+
 	}
 
 };

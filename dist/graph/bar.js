@@ -14,7 +14,7 @@ https://github.com/davoreric/chartphael
 chartphael.bar = function(options) {
 
 	//set public options and merge it with passed option object
-	this.options = chartphael.helper.extend({}, chartphael.bar.defaults, options);
+	this.options = chartphael.helper.fauxDeepExtend(options, chartphael.bar.defaults);
 
 	//set internal data
 	this.node = this.options.node;

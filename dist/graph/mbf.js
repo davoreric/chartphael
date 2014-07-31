@@ -14,7 +14,7 @@ https://github.com/davoreric/chartphael
 chartphael.bmf = function(options) {
 
 	//set public options and merge it with passed option object
-	this.options = chartphael.helper.extend({}, chartphael.bmf.defaults, options);
+	this.options = chartphael.helper.fauxDeepExtend(options, chartphael.bmf.defaults);
 
 	//set internal data
 	this.node = this.options.node;
@@ -278,7 +278,7 @@ chartphael.helper.extend(chartphael.bmf.prototype, {
 
 				this.infoAxis[i].animate({path: 'M'+this.bound.bl.x+' '+tempY+'L'+this.paperSize.x+' '+tempY}, 500, "easysin");
 				this.infoAxisText[i].animate({y:tempY}, 500, "easysin");
-				this.infoAxisText[i].attr({text:infoAxis[i].coord.y})
+				this.infoAxisText[i].attr({text:infoAxis[i].label})
 
 				var infoRectWidth = this.infoAxisText[i].getBBox().width + 4,
 					infoRectHeight = this.infoAxisText[i].getBBox().height + 2,
