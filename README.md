@@ -19,6 +19,13 @@ Init procedure:
             data: bmfChartJSON
         });
 
+        var bmfChartMobile = new chartphael({
+            node: document.getElementById('bmf_chart_mobile'),
+            type: 'bmf',
+            trackerOnly: true,
+            data: bmfChartJSON
+        });
+
         var pieChart = new chartphael({
             node: document.getElementById('pie_chart'),
             type: 'pie',
@@ -54,7 +61,7 @@ JSON formats:
                 { "percent": "20", "color": "#a6beaa" },
                 { "percent": "30", "color": "#bf8c53" },
                 { "percent": "10", "color": "#e4c95e" },
-                { "percent": "20", "color": "#f1eb66" }
+                { "percent": "10", "color": "#f1eb66" }
             ]
         };
 
@@ -62,10 +69,12 @@ JSON formats:
             "infoAxis": [
                 { 
                     "coord": { "y": 1300 },
+                    "label": "SET POINT",
                     "color": "#515d34"
                 },
                 { 
                     "coord": { "y": 1000 },
+                    "label": "MIN. CALORIES",
                     "color": "#bfce3b"
                 }
             ],
@@ -79,7 +88,7 @@ JSON formats:
                 { "y": 1600 },
                 { "y": 1600 }
             ],
-            "customCircle": {
+            "tracker": {
                 "statusColor": "#df4c44",
                 "progress": {
                     "innerStep": 100,
@@ -121,9 +130,10 @@ JSON formats:
         var barChartJSON = {
             "grid": {
                 "x": {
-                    "interval": 2,
+                    "interval": 1,
                     "min": 0,
-                    "max": 24
+                    "max": 8,
+                    "labels": ["20.08","21.08","22.08","23.08","24.08","25.08","26.08"]
                 },
                 "y": {
                     "interval": 25,
@@ -132,16 +142,12 @@ JSON formats:
                 }
             },
             "items": [
-                { "x": 2, "y": 30 },
-                { "x": 4, "y": 50 },
-                { "x": 6, "y": 65 },
-                { "x": 8, "y": 80 },
-                { "x": 10, "y": 95 },
-                { "x": 12, "y": 95 },
-                { "x": 14, "y": 100 },
-                { "x": 16, "y": 85 },
-                { "x": 18, "y": 75 },
-                { "x": 20, "y": 95 },
-                { "x": 22, "y": 121 }
+                { "x": 1, "y": 30, color: "red" },
+                { "x": 2, "y": 50 },
+                { "x": 3, "y": 65 },
+                { "x": 4, "y": 80 },
+                { "x": 5, "y": 95, color: "red" },
+                { "x": 6, "y": 95, color: "red" },
+                { "x": 7, "y": 100 }
             ]
         };
