@@ -69,7 +69,7 @@ chartphael.helper.extend(chartphael.pie.prototype, {
 		colors = [];
 
 		for(i=0;i<this.data.length;i++){
-			values.push(parseInt(this.data[i].percent));
+			values.push(this.data[i].percent);
 	    	colors.push(this.data[i].color);
 		}
 		
