@@ -312,34 +312,20 @@ https://github.com/davoreric/chartphael
 
 				var pointPosX = this.bound.bl.x + items[i].x * this.gridIncrementY,
 					pointPosY = this.bound.bl.y - items[i].y * this.gridIncrementX,
-					optionStroke = this.options.bar.style['stroke-width'],
-					currStyle = {};
+					currStyle = chartphael.helper.extend({}, this.options.bar.style);
 				
 				barPath[i] = 'M'+ pointPosX +' '+ pointPosY + 'L'+ pointPosX +' '+ this.bound.bl.y;
 
-				/* fix this nonsense */
-				currStyle['stroke-width'] = optionStroke;
+				if(items[i].color != undefined) {
 
-				if(items[i].color != 'undefined') {
-					
 					currStyle.fill = items[i].color;
 					currStyle.stroke = items[i].color;
 
-				} else {
-
-
-					currStyle.fill = this.options.bar.style.fill;
-					currStyle.stroke = this.options.bar.style.stroke;
-
 				}
-
-				console.log(currStyle);
 
 				this.paper.path(barPath[i]).attr(currStyle).toBack();
 				
 			}
-
-			
 			
 			return barPath;
 
@@ -431,7 +417,7 @@ chartphael.helper = {
 
 		var tempArray = Array.prototype.slice.call(arguments, 1);
 
-		for (i=0;i<tempArray.length;i++){
+		for (var i=0;i<tempArray.length;i++){
 			var source = tempArray[i];
 			if (source) {
 				for (var prop in source) {
