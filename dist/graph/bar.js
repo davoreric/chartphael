@@ -14,7 +14,7 @@ https://github.com/davoreric/chartphael
 chartphael.bar = function(options) {
 
 	//set public options and merge it with passed option object
-	this.options = chartphael.helper.extend({}, chartphael.bar.defaults, options);
+	this.options = chartphael.helper.fauxDeepExtend(options, chartphael.bar.defaults);
 
 	//set internal data
 	this.node = this.options.node;
@@ -30,6 +30,15 @@ chartphael.bar = function(options) {
 
 	//set SVG paper workarea
 	this.paper = Raphael(this.node,this.paperSize.x,this.paperSize.y);
+
+	//set responsive chart
+	if(this.options.responsive){
+		chartphael.helper.setResponsive({
+			node: this.paper,
+			width: this.paperSize.x,
+			height: this.paperSize.y
+		});
+	}
 
 	//start
 	this.init();
@@ -82,6 +91,8 @@ chartphael.helper.extend(chartphael.bar.prototype, {
 
 //default values
 chartphael.bar.defaults = {
+
+	responsive: false,
 
 	//setup X axis
 	xAxis: {

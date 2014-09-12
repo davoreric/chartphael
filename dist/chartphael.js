@@ -69,11 +69,11 @@ https://github.com/davoreric/chartphael
 				yAxisPath = '',
 				yAxisLabel;
 
-			//if axis has text, set first value
+			//if axis has text, set first numeric value
 			if (this.options.xAxis.text) {
 
 				yAxisLabel = this.data.grid.x.min;
-				
+					
 			}
 
 			//setting direction (left is default)
@@ -114,7 +114,18 @@ https://github.com/davoreric/chartphael
 
 				if (this.options.xAxis.text) {
 
-					this.paper.text(yPos.bottomX+currInc, yPos.bottomY+15, yAxisLabel).attr(this.options.grid.text.style);
+					if( !((i==0 || i==this.yAxisAmount-1) && this.options.type == 'bar') ){
+
+						if(typeof this.data.grid.x.labels != 'undefined'){
+							n = i;
+							if(this.options.type == 'bar') n--;
+							yAxisLabel = this.data.grid.x.labels[n];
+						}
+
+						this.paper.text(yPos.bottomX+currInc, yPos.bottomY+15, yAxisLabel).attr(this.options.grid.text.style);
+
+					}
+
 					yAxisLabel += this.data.grid.x.min + this.data.grid.x.interval;
 					
 				}
@@ -307,18 +318,26 @@ https://github.com/davoreric/chartphael
 		'bar': function(){
 
 			var items = this.data.items,
-				barPath = '';
+				barPath = [];
 
 			for(i=0;i<items.length;i++){
 
 				var pointPosX = this.bound.bl.x + items[i].x * this.gridIncrementY,
-					pointPosY = this.bound.bl.y - items[i].y * this.gridIncrementX;
+					pointPosY = this.bound.bl.y - items[i].y * this.gridIncrementX,
+					currStyle = chartphael.helper.extend({}, this.options.bar.style);
 				
-				barPath += 'M'+ pointPosX +' '+ pointPosY + 'L'+ pointPosX +' '+ this.bound.bl.y;
+				barPath[i] = 'M'+ pointPosX +' '+ pointPosY + 'L'+ pointPosX +' '+ this.bound.bl.y;
+
+				if(items[i].color != undefined) {
+
+					currStyle.fill = items[i].color;
+					currStyle.stroke = items[i].color;
+
+				}
+
+				this.paper.path(barPath[i]).attr(currStyle).toBack();
 				
 			}
-
-			this.paper.path(barPath).attr(this.options.bar.style).toBack();
 			
 			return barPath;
 
@@ -359,6 +378,13 @@ chartphael.helper = {
 		}
 
 		return bound;
+
+	},
+
+	'setResponsive': function(data){
+
+		data.node.setViewBox(0, 0, data.width, data.height );
+		data.node.setSize('100%', '100%');
 
 	},
 
@@ -403,7 +429,7 @@ chartphael.helper = {
 
 		var tempArray = Array.prototype.slice.call(arguments, 1);
 
-		for (i=0;i<tempArray.length;i++){
+		for (var i=0;i<tempArray.length;i++){
 			var source = tempArray[i];
 			if (source) {
 				for (var prop in source) {
@@ -412,6 +438,24 @@ chartphael.helper = {
 			}
 		}
 
+		return obj;
+
+	},
+
+	'fauxDeepExtend': function(obj, source) {
+
+		for (var prop in source){
+
+			if(typeof obj != 'object') break;
+
+			if (prop in obj){
+	        	chartphael.helper.fauxDeepExtend(obj[prop], source[prop]);
+	        } else {
+	        	obj[prop] = source[prop];
+	        }
+
+	    }
+            
 		return obj;
 
 	}

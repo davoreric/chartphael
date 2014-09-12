@@ -14,7 +14,7 @@ https://github.com/davoreric/chartphael
 chartphael.pie = function(options) {
 
 	//set public options and merge it with passed option object
-	this.options = chartphael.helper.extend({}, chartphael.pie.defaults, options);
+	this.options = chartphael.helper.fauxDeepExtend(options, chartphael.pie.defaults);
 
 	//set internal data
 	this.node = this.options.node;
@@ -27,11 +27,20 @@ chartphael.pie = function(options) {
 
 	this.centerX = this.paperSize.x/2;
 	this.centerY = this.paperSize.y/2;
-	this.radius = this.centerY-40;
+	this.radius = this.centerY-this.options.padding;
 
 	//set SVG paper workarea
 	this.paper = Raphael(this.node,this.paperSize.x,this.paperSize.y);
 
+	//set responsive chart
+	if(this.options.responsive){
+		chartphael.helper.setResponsive({
+			node: this.paper,
+			width: this.paperSize.x,
+			height: this.paperSize.y
+		});
+	}
+	 
 	//adding custom arc attribute
 	this.paper.customArc();
 
@@ -47,6 +56,11 @@ chartphael.helper.extend(chartphael.pie.prototype, {
 		//call method for creating pie graph
 		this.setPie();
 
+		//adding doughnut cutout
+		if(this.options.doughnut){
+			this.doughnut();
+		}
+
 	},
 
 	setPie: function(){
@@ -55,11 +69,20 @@ chartphael.helper.extend(chartphael.pie.prototype, {
 		colors = [];
 
 		for(i=0;i<this.data.length;i++){
-			values.push(parseInt(this.data[i].percent));
+			values.push(this.data[i].percent);
 	    	colors.push(this.data[i].color);
 		}
 		
 		this.paper.pieChart(this.centerX, this.centerY, this.radius, values, colors, true);
+
+	},
+
+	doughnut: function(){
+
+		this.paper.circle(this.centerX, this.centerY, this.radius-(this.options.doughnutStroke*2)).attr({
+			'fill': this.options.doughnutBkg,
+			'stroke-width': 0
+		});
 
 	},
 
@@ -79,4 +102,10 @@ chartphael.helper.extend(chartphael.pie.prototype, {
 });
 
 //default values
-chartphael.pie.defaults = {};
+chartphael.pie.defaults = {
+	responsive: false,
+	padding: 40,
+	doughnut: false,
+	doughnutStroke: 10,
+	doughnutBkg: '#fff'
+};

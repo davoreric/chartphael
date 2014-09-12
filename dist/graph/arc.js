@@ -14,10 +14,11 @@ https://github.com/davoreric/chartphael
 chartphael.arc = function(options) {
 
 	//set public options and merge it with passed option object
-	this.options = chartphael.helper.extend({}, chartphael.arc.defaults, options);
+	this.options = chartphael.helper.fauxDeepExtend(options, chartphael.arc.defaults);
 
 	//set internal data
 	this.node = this.options.node;
+	this.data = this.options.data;
 
 	this.paperSize = {
 		'x': this.node.offsetWidth,
@@ -29,6 +30,15 @@ chartphael.arc = function(options) {
 	
 	//set SVG paper workarea
 	this.paper = Raphael(this.node,this.paperSize.x,this.paperSize.y);
+
+	//set responsive chart
+	if(this.options.responsive){
+		chartphael.helper.setResponsive({
+			node: this.paper,
+			width: this.paperSize.x,
+			height: this.paperSize.y
+		});
+	}
 
 	//adding custom arc attribute
 	this.paper.customArc();
@@ -42,35 +52,52 @@ chartphael.helper.extend(chartphael.arc.prototype, {
 
 	init: function(){
 
+		if(this.data.value>100) this.data.value = 100;
+
+		//test option and call method for creating track background
+		if(this.options.track){
+			this.setTrack();	
+		}
+
 		//call method for creating arc graph
-		this.setChart(this.node.getAttribute('data-value'));
+		this.setChart(this.data.value);
+
+	},
+
+	setTrack: function(end){
+
+		this.chart = this.paper.path().attr({
+		    'stroke': this.options.colorTrack,
+		    'stroke-width': this.options.stroke,
+		    arc: [this.center, this.center, 100, 100, this.radius,false]
+		});
 
 	},
 
 	setChart: function(end){
 
-		var chart = this.paper.path().attr({
+		this.chart = this.paper.path().attr({
 		    'stroke': this.options.colorChart,
 		    'stroke-width': this.options.stroke,
 		    arc: [this.center, this.center, 0, 100, this.radius,false]
 		});
 
-		chart.animate({
+		this.chart.animate({
 		    arc: [this.center, this.center, end, 100, this.radius,false]
 		}, 500, "easysin");
 
 	},
 
-	updateJSON: function(json){
+	updateData: function(json){
 
 		//replace current JSON
 		this.data = json;
 
-		//clear paper
-		this.paper.clear();
+		if(this.data.value>100) this.data.value = 100;
 
-		//draw chart
-		this.init();
+		this.chart.animate({
+		    arc: [this.center, this.center, this.data.value, 100, this.radius,false]
+		}, 500, "easysin");
 
 	}
 
@@ -78,6 +105,9 @@ chartphael.helper.extend(chartphael.arc.prototype, {
 
 //default values
 chartphael.arc.defaults = {
+	responsive: false,
 	stroke: 5,
-	colorChart: '#8fbb48'
+	colorChart: '#8fbb48',
+	track: false,
+	colorTrack: '#ccc',
 };
