@@ -65,6 +65,17 @@ chartphael.helper.extend(chartphael.line.prototype, {
 
 	},
 
+	additionalGraph: function(newData){
+
+		this.data.items = newData.items;
+		
+		this.options.line.style.stroke = newData.color;
+		this.options.dots.style.fill = newData.color;
+
+		chartphael.draw.line.call(this);
+
+	},
+
 	updateJSON: function(json){
 
 		//replace current JSON

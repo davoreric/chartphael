@@ -29,6 +29,23 @@ Init procedure:
             data: lineChartJSON
         });
 
+        var multipleLineGraph = new chartphael({
+            node: document.getElementById('multiple_line_chart'),
+            type: 'line',
+            data: lineChartJSON,
+            line: {
+                shadow: {
+                    show: false
+                },
+                style: {
+                    'stroke': '#8cb428',
+                    'stroke-width': 3
+                }
+            }
+        });
+
+        multipleLineGraph.additionalGraph(newLineJSON);
+        
         var barGraph = new chartphael({
             node: document.getElementById('bar_chart'),
             type: 'bar',
@@ -106,6 +123,22 @@ JSON formats:
                 { "x": 20, "y": 85 },
                 { "x": 23, "y": 75 },
                 { "x": 26, "y": 95 }
+            ]
+        };
+
+        var newLineJSON = {
+            "color": "orange",
+            "items": [
+                { "x": 0, "y": 40 },
+                { "x": 4, "y": 60 },
+                { "x": 6, "y": 75 },
+                { "x": 8, "y": 90 },
+                { "x": 10, "y": 105 },
+                { "x": 13, "y": 105 },
+                { "x": 18, "y": 120 },
+                { "x": 20, "y": 15 },
+                { "x": 23, "y": 65 },
+                { "x": 26, "y": 55 }
             ]
         };
 
