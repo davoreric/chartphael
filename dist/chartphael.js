@@ -266,7 +266,7 @@ https://github.com/davoreric/chartphael
 					//this checks if X grid has outer lines set to false and then does not draws first and last dots
 					if ( !((i==0 || i==items.length-1) && !this.options.xAxis.outerLines) ) {
 
-						dotsArray[i] = this.paper.circle(pointPosX, pointPosY, this.options.dots.radius).attr(this.options.dots.style);	
+						dotsArray.push(this.paper.circle(pointPosX, pointPosY, this.options.dots.radius).attr(this.options.dots.style));
 
 						if (this.options.dots.text.show) {
 							
@@ -298,14 +298,26 @@ https://github.com/davoreric/chartphael
 				this.paper.path(linePath+'L'+ pointPosXmax +' '+ this.bound.br.y +'L'+ pointPosXmin +' '+ this.bound.br.y).attr({
 					fill: this.options.line.shadow.fill,
 					'stroke-width': 0
-				}).toBack();
+				});
 
 			}
 
-			this.pathEl = this.paper.path(linePath).attr(this.options.line.style).toBack();
+			this.pathEl = this.paper.path(linePath).attr(this.options.line.style);
 
-			for(n=0;n<dotTextBkg.length;n++){
-				dotTextBkg[n].toBack();	
+			//reorder elements
+			
+			this.pathEl.toFront();
+
+			for(var n=0;n<dotTextBkg.length;n++){
+				dotTextBkg[n].toFront();	
+			}
+
+			for(var n=0;n<dotsTextArray.length;n++){
+				dotsTextArray[n].toFront();	
+			}
+
+			for(var n=0;n<dotsArray.length;n++){
+				dotsArray[n].toFront();	
 			}
 
 		},
