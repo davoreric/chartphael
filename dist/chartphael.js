@@ -451,19 +451,27 @@ chartphael.helper = {
 
 	'fauxDeepExtend': function(obj, source) {
 
-		for (var prop in source){
+		if (window.jQuery) {  
+		    
+			return $.extend(true, {}, source, obj);
 
-			if(typeof obj != 'object') break;
+		} else {
+		    
+			for (var prop in source){
 
-			if (prop in obj){
-	        	chartphael.helper.fauxDeepExtend(obj[prop], source[prop]);
-	        } else {
-	        	obj[prop] = source[prop];
-	        }
+				if(typeof obj != 'object') break;
 
-	    }
-            
-		return obj;
+				if (prop in obj){
+		        	chartphael.helper.fauxDeepExtend(obj[prop], source[prop]);
+		        } else {
+		        	obj[prop] = source[prop];
+		        }
+
+		    }
+	            
+			return obj;
+
+		}
 
 	}
 
