@@ -126,7 +126,7 @@ https://github.com/davoreric/chartphael
 
 					}
 
-					yAxisLabel += this.data.grid.x.min + this.data.grid.x.interval;
+					yAxisLabel += this.data.grid.x.interval;
 					
 				}
 
@@ -186,7 +186,7 @@ https://github.com/davoreric/chartphael
 				if (this.options.yAxis.text) {
 
 					this.paper.text(xPos.leftX-15, xPos.leftY+currInc, xAxisLabel).attr(this.options.grid.text.style);
-					xAxisLabel += this.data.grid.y.min + this.data.grid.y.interval;
+					xAxisLabel += this.data.grid.y.interval;
 					
 				}
 
@@ -222,10 +222,8 @@ https://github.com/davoreric/chartphael
 			}
 
 			if (this.options.yAxis.step) {
-
-				var data = chartphael.helper.getDataRange.call(this,this.data,'y'),
-					dataHeight = data.range;
-
+				var dataRangeY = chartphael.helper.getDataRange.call(this,this.data,'y');
+				var dataHeight = dataRangeY.range;
 			}
 
 			for(i=0;i<items.length;i++){
@@ -234,12 +232,21 @@ https://github.com/davoreric/chartphael
 
 					var currInc = this.options.yAxis.step*i,
 						pointPosX = this.bound.br.x-currInc,
-						pointPosY = this.bound.br.y - ((items[i].y - data.min)*(this.bound.size.y/dataHeight));
+						pointPosY = this.bound.br.y - ((items[i].y - dataRangeY.min)*(this.bound.size.y/dataHeight));
 
 				} else {
 
-					var pointPosX = this.bound.bl.x + items[i].x * this.gridIncrementY,
-						pointPosY = this.bound.bl.y - items[i].y * this.gridIncrementX;
+					var pointPosX = this.bound.bl.x + items[i].x * this.gridIncrementY;
+
+					if(this.data.grid.y.min < 0){
+
+						var	pointPosY = this.bound.bl.y + this.data.grid.y.min * this.gridIncrementX - items[i].y * this.gridIncrementX;
+
+					} else {
+
+						var	pointPosY = this.bound.bl.y - items[i].y * this.gridIncrementX;
+
+					}
 
 				}
 
