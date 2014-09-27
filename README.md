@@ -1,6 +1,8 @@
 chartphael
 ==========
 
+DEMO on http://davoreric.com/chartphael/demo/
+
 chart library for raphael.js, still in heavy ALPHA  
 
 
