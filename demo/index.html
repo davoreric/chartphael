@@ -133,7 +133,8 @@
                     "y": {
                         "interval": 25,
                         "min": 0,
-                        "max": 175
+                        "max": 175,
+                        "mainLabel": "Crazy factor"
                     }
                 },
                 "items": [
@@ -238,6 +239,9 @@
                 node: document.getElementById('multiple_line_chart'),
                 type: 'line',
                 data: lineChartJSON,
+                yAxis: {
+                    mainLabel: true
+                },
                 line: {
                     shadow: {
                         show: false

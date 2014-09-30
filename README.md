@@ -51,6 +51,9 @@ Init procedure:
             node: document.getElementById('multiple_line_chart'),
             type: 'line',
             data: lineChartJSON,
+            yAxis: {
+                mainLabel: true
+            },
             line: {
                 shadow: {
                     show: false
@@ -80,7 +83,7 @@ JSON formats:
                 { "percent": "20", "color": "#a6beaa" },
                 { "percent": "30", "color": "#bf8c53" },
                 { "percent": "10", "color": "#e4c95e" },
-                { "percent": "10", "color": "#f1eb66" }
+                { "percent": "20", "color": "#f1eb66" }
             ]
         };
 
@@ -129,7 +132,8 @@ JSON formats:
                 "y": {
                     "interval": 25,
                     "min": 0,
-                    "max": 175
+                    "max": 175,
+                    "mainLabel": "Crazy factor"
                 }
             },
             "items": [

@@ -98,6 +98,12 @@ https://github.com/davoreric/chartphael
 				}
 
 			}
+
+			if (this.options.yAxis.mainLabel) {
+
+				this.paper.text(10, 15, this.data.grid.y.mainLabel).attr(this.options.grid.text.style).attr({'text-anchor': 'start'});
+
+			}
 		
 			//setting path for Y axis
 

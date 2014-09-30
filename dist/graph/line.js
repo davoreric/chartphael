@@ -109,6 +109,7 @@ chartphael.line.defaults = {
 	xAxis: {
 		show: true,
 		text: true,
+		mainLabel: false,
 		step: false,
 		outerLines: false,
 		direction: 'bottom'
@@ -119,6 +120,7 @@ chartphael.line.defaults = {
 		show: true,
 		text: true,
 		step: false,
+		mainLabel: false,
 		outerLines: false,
 		direction: 'left'
 	},
