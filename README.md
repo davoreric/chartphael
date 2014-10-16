@@ -113,7 +113,7 @@ JSON formats:
             "tracker": {
                 "statusColor": "#df4c44",
                 "progress": {
-                    "innerStep": 100,
+                    "innerStep": { "percent": 100, "color": "#8eb727" },
                     "outerStep": [
                         { "percent": 25, "color": "#e6d62c" },
                         { "percent": 125, "color": "#df4c44" }

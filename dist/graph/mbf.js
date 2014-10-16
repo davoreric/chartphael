@@ -132,22 +132,22 @@ chartphael.helper.extend(chartphael.bmf.prototype, {
 
 		//text
 		this.trackerArray[4] = this.paper.text(pointPosX, pointPosY, this.data.items[0].y).attr({
-			'fill': '#8eb727',
+			'fill': this.data.tracker.progress.innerStep.color,
 			'font-size':'19px',
-			'stroke': '#8eb727',
+			'stroke': this.data.tracker.progress.innerStep.color,
 			'stroke-width': 0,
 			'font-family': this.options.dots.text.style['font-family']
 		});
 
 		//inner status circle
 		this.trackerArray[5] = this.paper.path().attr({
-		    'stroke': '#8eb727',
+		    'stroke': this.data.tracker.progress.innerStep.color,
 		    'stroke-width': 8,
 		    arc: [pointPosX, pointPosY, 0, 100, 28, false]
 		});
 
 		this.trackerArray[5].animate({
-			arc: [pointPosX, pointPosY, this.data.tracker.progress.innerStep, 100, 28, false]
+			arc: [pointPosX, pointPosY, this.data.tracker.progress.innerStep.percent, 100, 28, false]
 		}, 500, "easysin");
 
 		//outer status circle
@@ -339,12 +339,13 @@ chartphael.helper.extend(chartphael.bmf.prototype, {
 		this.trackerArray[3].animate({cy:pointPosY}, 500, "easysin");
 
 		//text
-		this.trackerArray[4].animate({y:pointPosY}, 500, "easysin");
+		this.trackerArray[4].animate({y:pointPosY, fill: json.tracker.progress.innerStep.color}, 500, "easysin");
 		this.trackerArray[4].attr({text:items[0].y})
 
 		//inner status
 		this.trackerArray[5].animate({
-			arc: [pointPosX, pointPosY, json.tracker.progress.innerStep, 100, 28, false]
+			arc: [pointPosX, pointPosY, json.tracker.progress.innerStep.percent, 100, 28, false],
+			stroke: json.tracker.progress.innerStep.color
 		}, 500, "easysin");
 
 		//outer status
