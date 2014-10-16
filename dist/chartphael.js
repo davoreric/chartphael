@@ -12,7 +12,16 @@ https://github.com/davoreric/chartphael
 
 	    if ( !(options.node == null || chartphael[options.type] == null) ) {
 
-			return new chartphael[options.type](options);
+	    	if (Raphael.type) {
+
+	    		return new chartphael[options.type](options);
+
+	    	} else {
+				
+				return new chartphael['fallback'](options);
+				
+	    	}
+	    	
 
 	    }
 
@@ -574,4 +583,27 @@ Raphael.fn.pieChart = function (cx, cy, r, values, colors) {
 
     return chart;
 
+};
+
+/* Raphael extend for Pie graph */
+chartphael.fallback = function(options) {
+
+	this.options = chartphael.helper.fauxDeepExtend(options, chartphael.fallback.defaults);
+	this.node = this.options.node;
+
+	if(typeof this.options.fallback == 'string'){
+
+		this.node.innerHTML = this.options.fallback;
+
+	} else if(typeof this.options.fallback == 'function') {
+
+		this.options.fallback();
+
+	}
+
+};
+
+//default values
+chartphael.fallback.defaults = {
+	fallback: '<p>Raphael is not supported!</p>' 
 };
