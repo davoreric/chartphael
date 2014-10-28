@@ -259,7 +259,7 @@ https://github.com/davoreric/chartphael
 
 					} else {
 
-						var	pointPosY = this.bound.bl.y - items[i].y * this.gridIncrementX;
+						var	pointPosY = this.bound.bl.y - (items[i].y - this.data.grid.y.min) * this.gridIncrementX;
 
 					}
 
