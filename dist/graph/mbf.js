@@ -313,6 +313,7 @@ chartphael.helper.extend(chartphael.bmf.prototype, {
 		//central status
 		var values = json.tracker.progress.outerStep,
 			newValues = [],
+			newColors = [],
 			total = 100;
 
 		for (var m = 0; m < values.length; m++) {
@@ -322,8 +323,10 @@ chartphael.helper.extend(chartphael.bmf.prototype, {
 				newValues[m] = values[m].percent + newValues[m-1];
 				if(newValues[m]>total) newValues[m] = total;
 			}
+			newColors[m] = values[m].color;
 		}
 
+		newColors.reverse();
 		newValues.reverse();
 
 		this.trackerArray[1].animate({cy:pointPosY}, 500, "easysin");
@@ -331,7 +334,8 @@ chartphael.helper.extend(chartphael.bmf.prototype, {
 		for(n=0;n<this.trackerArray[2].length;n++){
 
 			this.trackerArray[2][n].animate({
-				arc: [pointPosX, pointPosY, newValues[n], total, 50, true]
+				arc: [pointPosX, pointPosY, newValues[n], total, 50, true],
+				fill: newColors[n]
 			}, 500, "easysin");
 
 		}
