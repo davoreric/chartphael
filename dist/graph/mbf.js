@@ -151,15 +151,18 @@ chartphael.helper.extend(chartphael.bmf.prototype, {
 		}, 500, "easysin");
 
 		//outer status circle
-		this.trackerArray[6] = this.paper.circle(pointPosX, pointPosY, 60).attr({
-			'fill': 'transparent',
-			'stroke': this.data.tracker.statusColor,
-			'stroke-width': '7',
-			'stroke-dasharray': '.'
+		this.trackerArray[6] = this.paper.path().attr({
+		    'stroke': this.data.tracker.status.color,
+		    'stroke-width': 7,
+		    'stroke-dasharray': '.',
+		    arc: [pointPosX, pointPosY, 0, 100, 60, false]
 		});
-
-		this.trackerArray[6].node.setAttribute('stroke-dasharray','7,1.95');
 		
+		this.trackerArray[6].node.setAttribute('stroke-dasharray','7,1.95');
+
+		this.trackerArray[6].animate({
+			arc: [pointPosX, pointPosY, this.data.tracker.status.percent, 100, 60, false]
+		}, 500, "easysin");
 
 	},
 
@@ -353,7 +356,10 @@ chartphael.helper.extend(chartphael.bmf.prototype, {
 		}, 500, "easysin");
 
 		//outer status
-		this.trackerArray[6].animate({cy:pointPosY, stroke: json.tracker.statusColor}, 500, "easysin");
+		this.trackerArray[6].animate({
+			arc: [pointPosX, pointPosY, json.tracker.status.percent, 100, 60, false],
+			stroke: json.tracker.status.color
+		}, 500, "easysin");
 
 	}
 
