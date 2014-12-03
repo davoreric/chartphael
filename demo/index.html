@@ -209,7 +209,18 @@
             var bmfChart = new chartphael({
                 node: document.getElementById('bmf_chart'),
                 type: 'bmf',
-                data: bmfChartJSON
+                data: bmfChartJSON,
+                onDotClick: function (index, dot, data) {
+                    console.log('click on dot with index ' + index);
+                },
+                onDotHoverIn: function (index, dot, data) {
+                    console.log('hover-in on dot with index ' + index);
+                    dot.animate({'stroke-width': 8}, 70);
+                },
+                onDotHoverOut: function (index, dot, data) {
+                    console.log('hover-out on dot with index ' + index);
+                    dot.animate({'stroke-width': 4}, 70);
+                }
             });
 
             var bmfChartMobile = new chartphael({
@@ -235,7 +246,18 @@
             var lineGraph = new chartphael({
                 node: document.getElementById('line_chart'),
                 type: 'line',
-                data: lineChartJSON
+                data: lineChartJSON,
+                onDotClick: function (index, dot, data) {
+                    console.log('click on dot with index ' + index);
+                },
+                onDotHoverIn: function (index, dot, data) {
+                    console.log('hover-in on dot with index ' + index);
+                    dot.animate({'stroke-width': 5}, 50);
+                },
+                onDotHoverOut: function (index, dot, data) {
+                    console.log('hover-out on dot with index ' + index);
+                    dot.animate({'stroke-width': 2}, 50);
+                }
             });
 
             var multipleLineGraph = new chartphael({

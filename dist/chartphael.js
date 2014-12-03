@@ -281,7 +281,41 @@ https://github.com/davoreric/chartphael
 					//this checks if X grid has outer lines set to false and then does not draws first and last dots
 					if ( !((i==0 || i==items.length-1) && !this.options.xAxis.outerLines) ) {
 
-						dotsArray.push(this.paper.circle(pointPosX, pointPosY, this.options.dots.radius).attr(this.options.dots.style));
+						var dot = this.paper.circle(pointPosX, pointPosY, this.options.dots.radius).attr(this.options.dots.style);
+
+						dotsArray.push(dot);
+
+						// check if onDotClick exists
+						// call onDotClick on dot click
+						this.options.onDotClick && dot.click(function (index, dot) {
+
+							// create closure to preserve dot index (i)
+							return function () {
+								this.options.onDotClick(index, dot, this.data);
+							}.bind(this);
+
+						}.bind(this)(i-1, dot));
+
+						// check if onDotHoverIn exists
+						// call onDotHoverIn on hover in
+						// as a second parameter of Raphael hover function check
+						// if onDotHoverOut exists
+						// call onDotHoverOut on hover out
+						dot.hover(this.options.onDotHoverIn && function (index, dot) {
+
+							// create closure to preserve dot index (i)
+							return function () {
+								this.options.onDotHoverIn(index, dot, this.data);
+							}.bind(this);
+
+						}.bind(this)(i-1, dot), this.options.onDotHoverOut && function (index, dot) {
+
+							// create closure to preserve dot index (i)
+							return function () {
+								this.options.onDotHoverOut(index, dot, this.data);
+							}.bind(this);
+
+						}.bind(this)(i-1, dot));
 
 						if (this.options.dots.text.show) {
 							
