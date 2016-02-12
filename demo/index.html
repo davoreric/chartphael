@@ -18,19 +18,7 @@
 
         <section id="content">
 
-            <section>
-                <h2>BMF Chart</h2>
-                <div class="chart_wrap large">
-                    <div class="chart_el" id="bmf_chart"></div>
-                </div>
-            </section>
-
-            <section>
-                <h2>BMF Chart mobile</h2>
-                <div class="chart_wrap mobile">
-                    <div class="chart_el" id="bmf_chart_mobile"></div>
-                </div>
-            </section>
+            <h1>General charts</h1>
 
             <section>
                 <h2>Pie chart</h2>
@@ -67,11 +55,35 @@
                 </div>
             </section>
 
+            <h1>Custom charts</h1>
+
+            <section>
+                <h2>Clock Chart</h2>
+                <div class="chart_wrap mobile">
+                    <div class="chart_el" id="clock_chart"></div>
+                </div>
+            </section>
+
+            <section>
+                <h2>BMF Chart</h2>
+                <div class="chart_wrap large">
+                    <div class="chart_el" id="bmf_chart"></div>
+                </div>
+            </section>
+
+            <section>
+                <h2>BMF Chart mobile</h2>
+                <div class="chart_wrap mobile">
+                    <div class="chart_el" id="bmf_chart_mobile"></div>
+                </div>
+            </section>
+
         </section>
         
         <script src="../dist/chartphael.js"></script>
         <script src="../dist/graph/arc.js"></script>
         <script src="../dist/graph/mbf.js"></script>
+        <script src="../dist/graph/clock.js"></script>
         <script src="../dist/graph/line.js"></script>
         <script src="../dist/graph/bar.js"></script>
         <script src="../dist/graph/pie.js"></script>
@@ -86,6 +98,20 @@
                     { "percent": "10", "color": "#e4c95e" },
                     { "percent": "20", "color": "#f1eb66" }
                 ]
+            };
+
+            var clockChartJSON = {
+                "content": {
+                    "value": 1282,
+                    "unit": "kcal"
+                },
+                "progress": {
+                    "innerStep": { "percent": 100, "color": "#8eb727" },
+                    "outerStep": [
+                        { "percent": 25, "color": "#e6d62c" },
+                        { "percent": 125, "color": "#df4c44" }
+                    ]
+                }
             };
 
             var bmfChartJSON = {
@@ -204,6 +230,23 @@
                 type: 'arc',
                 track: true,
                 data: { value: 45 }
+            });
+
+            var clockChart = new chartphael({
+                node: document.getElementById('clock_chart'),
+                type: 'clock',
+                data: clockChartJSON,
+                onDotClick: function (index, dot, data) {
+                    console.log('click on dot with index ' + index);
+                },
+                onDotHoverIn: function (index, dot, data) {
+                    console.log('hover-in on dot with index ' + index);
+                    dot.animate({'stroke-width': 8}, 70);
+                },
+                onDotHoverOut: function (index, dot, data) {
+                    console.log('hover-out on dot with index ' + index);
+                    dot.animate({'stroke-width': 4}, 70);
+                }
             });
 
             var bmfChart = new chartphael({

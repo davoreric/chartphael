@@ -305,7 +305,7 @@ chartphael.helper.extend(chartphael.bmf.prototype, {
 
 		if(this.options.trackerOnly){
 			
-			var pointPosY = this.paperSize.y/2;
+			var pointPosY = this.paperSize.y/2,
 				pointPosX = this.paperSize.x/2;
 
 		}
