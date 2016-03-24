@@ -3,7 +3,7 @@ chartphael
 
 DEMO on http://davoreric.com/chartphael/demo/
 
-chart library for raphael.js, still in heavy ALPHA  
+chart library for raphael.js
 
 
 Init procedure:  
@@ -26,6 +26,23 @@ Init procedure:
             type: 'bmf',
             trackerOnly: true,
             data: bmfChartJSON
+        });
+
+        var cLineChart = new chartphael({
+            node: document.getElementById('cLine_chart'),
+            type: 'cLine',
+            data: cLineChartJSON,
+            onDotClick: function (index, dot, data) {
+                console.log('click on dot with index ' + index);
+            },
+            onDotHoverIn: function (index, dot, data) {
+                console.log('hover-in on dot with index ' + index);
+                dot.animate({'stroke-width': 8}, 70);
+            },
+            onDotHoverOut: function (index, dot, data) {
+                console.log('hover-out on dot with index ' + index);
+                dot.animate({'stroke-width': 4}, 70);
+            }
         });
 
         var pieChart = new chartphael({
@@ -123,6 +140,46 @@ JSON formats:
                     ]
                 }
             }
+        };
+
+        var cLineChartJSON = {
+            "infoAxis": [
+                { 
+                    "coord": { "y": 1450 },
+                    "label": "SET POINT",
+                    "color": "#515d34"
+                }
+            ],
+            "grid": {
+                "x": {
+                    "interval": 1,
+                    "min": 0,
+                    "max": 6,
+                    "labels": [
+                        { "name": "MONTAG", "date": "19.12.2016" },
+                        { "name": "MONTAG", "date": "19.12.2016" },
+                        { "name": "MONTAG", "date": "19.12.2016" },
+                        { "name": "MONTAG", "date": "19.12.2016" },
+                        { "name": "MONTAG", "date": "19.12.2016" },
+                        { "name": "MONTAG", "date": "19.12.2016" },
+                        { "name": "MONTAG", "date": "19.12.2016" }
+                    ]
+                },
+                "y": {
+                    "interval": 100,
+                    "min": 1000,
+                    "max": 2000
+                }
+            },
+            "items": [
+                { "x": 0, "y": 1700 },
+                { "x": 1, "y": 1800 },
+                { "x": 2, "y": 1200 },
+                { "x": 3, "y": 1600 },
+                { "x": 4, "y": 1300 },
+                { "x": 5, "y": 1300 },
+                { "x": 6, "y": 1600 }
+            ]
         };
 
         var lineChartJSON = {

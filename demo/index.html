@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
     <head>
-        <title>Chartphael demo - alpha</title>
+        <title>Chartphael demo</title>
         <script src="raphael/raphael-min.js"></script>
         <meta name="viewport" content="initial-scale = 1, user-scalable = no">
         <link href='http://fonts.googleapis.com/css?family=Open+Sans+Condensed:700' rel='stylesheet' type='text/css'>
@@ -72,6 +72,13 @@
             </section>
 
             <section>
+                <h2>Custom line Chart</h2>
+                <div class="chart_wrap large">
+                    <div class="chart_el" id="cLine_chart"></div>
+                </div>
+            </section>
+
+            <section>
                 <h2>BMF Chart mobile</h2>
                 <div class="chart_wrap mobile">
                     <div class="chart_el" id="bmf_chart_mobile"></div>
@@ -87,6 +94,7 @@
         <script src="../dist/graph/line.js"></script>
         <script src="../dist/graph/bar.js"></script>
         <script src="../dist/graph/pie.js"></script>
+        <script src="../dist/graph/cLine.js"></script>
         
         <script>
             
@@ -150,6 +158,46 @@
                         ]
                     }
                 }
+            };
+
+            var cLineChartJSON = {
+                "infoAxis": [
+                    { 
+                        "coord": { "y": 1450 },
+                        "label": "SET POINT",
+                        "color": "#515d34"
+                    }
+                ],
+                "grid": {
+                    "x": {
+                        "interval": 1,
+                        "min": 0,
+                        "max": 6,
+                        "labels": [
+                            { "name": "MONTAG", "date": "19.12.2016" },
+                            { "name": "MONTAG", "date": "19.12.2016" },
+                            { "name": "MONTAG", "date": "19.12.2016" },
+                            { "name": "MONTAG", "date": "19.12.2016" },
+                            { "name": "MONTAG", "date": "19.12.2016" },
+                            { "name": "MONTAG", "date": "19.12.2016" },
+                            { "name": "MONTAG", "date": "19.12.2016" }
+                        ]
+                    },
+                    "y": {
+                        "interval": 100,
+                        "min": 1000,
+                        "max": 2000
+                    }
+                },
+                "items": [
+                    { "x": 0, "y": 1700 },
+                    { "x": 1, "y": 1800 },
+                    { "x": 2, "y": 1200 },
+                    { "x": 3, "y": 1600 },
+                    { "x": 4, "y": 1300 },
+                    { "x": 5, "y": 1300 },
+                    { "x": 6, "y": 1600 }
+                ]
             };
 
             var lineChartJSON = {
@@ -253,6 +301,23 @@
                 node: document.getElementById('bmf_chart'),
                 type: 'bmf',
                 data: bmfChartJSON,
+                onDotClick: function (index, dot, data) {
+                    console.log('click on dot with index ' + index);
+                },
+                onDotHoverIn: function (index, dot, data) {
+                    console.log('hover-in on dot with index ' + index);
+                    dot.animate({'stroke-width': 8}, 70);
+                },
+                onDotHoverOut: function (index, dot, data) {
+                    console.log('hover-out on dot with index ' + index);
+                    dot.animate({'stroke-width': 4}, 70);
+                }
+            });
+
+            var cLineChart = new chartphael({
+                node: document.getElementById('cLine_chart'),
+                type: 'cLine',
+                data: cLineChartJSON,
                 onDotClick: function (index, dot, data) {
                     console.log('click on dot with index ' + index);
                 },
