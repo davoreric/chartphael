@@ -84,20 +84,17 @@ chartphael.helper.extend(chartphael.cLine.prototype, {
 
         for (i=0;i<xLines.length;i++) {
 
-            this.xLinesText1[i] = this.paper.text(leftPos, this.bound.bl.y + 15, xLines[i].name).attr({
+            this.xLinesText1[i] = this.paper.text(leftPos, this.bound.bl.y + 35, xLines[i].name).attr({
                 'fill': '#fff',
-                'font-size':'12px',
-                'text-anchor': 'center',
-                'stroke-width': 0,
-                'stroke': '#fff',
-                'font-family': this.options.dots.text.style['font-family']
+                'font-size':'11px',
+                'text-anchor': 'center'
             });
 
-            this.xLinesText1[i] = this.paper.text(leftPos, this.bound.bl.y + 33, xLines[i].date).attr({
+            this.xLinesText1[i] = this.paper.text(leftPos, this.bound.bl.y + 50, xLines[i].date).attr({
                 'fill': '#fff',
                 'font-size':'14px',
                 'text-anchor': 'center',
-                'stroke-width': 0,
+                'stroke-width': .75,
                 'stroke': '#fff',
                 'font-family': this.options.dots.text.style['font-family']
             });
@@ -202,16 +199,16 @@ chartphael.cLine.defaults = {
         },
         style: {
             'stroke': '#fff',
-            'stroke-width': 4
+            'stroke-width': 3
         }
     },
 
     dots: {
         show: true,
-        radius: 8,
+        radius: 6,
         style: {
             'fill': '#819926',
-            'stroke-width': 4,
+            'stroke-width': 3,
             'stroke': '#fff'
         },
         text: {
@@ -219,7 +216,7 @@ chartphael.cLine.defaults = {
             bkg: '#99c031',
             style: {
                 'fill': '#fff',
-                'font-size':'16px',
+                'font-size':'14px',
                 'stroke-width': 0,
                 'stroke': '#fff',
                 'font-family': '"Open Sans Condensed",Arial,sans-serif'
@@ -228,10 +225,10 @@ chartphael.cLine.defaults = {
     },
 
     padding: {
-        'top': 40,
-        'right': 100,
+        'top': 20,
+        'right': 60,
         'bottom': 80,
-        'left': 100
+        'left': 60
     }
 
 };
